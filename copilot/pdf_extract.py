@@ -279,7 +279,7 @@ def rule_text(page, rule, doc_quarter):
     approx = approx or bool(re.search(r"c\.\s*$", text[:m.start("value")]))
     if v is None:
         raise RuleError(f"not a number: {m.group('value')!r}")
-    return {doc_quarter: dict(value=v, approx=approx, printed=m.group(0)[:120], detail=m.group(0)[:120])}
+    return {doc_quarter: dict(value=v, approx=approx, printed=m.group("value"), detail=m.group(0)[:120])}
 
 
 KINDS = {"grid": rule_grid, "chart": rule_chart, "labelled": rule_labelled, "text": rule_text}

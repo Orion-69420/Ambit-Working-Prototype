@@ -128,8 +128,8 @@ def _check_companies(comps, problems):
                 if label in seen:
                     problems.append(f"company {cid}: segment label {label!r} maps to both {seen[label]!r} and {canon!r}")
                 seen[label] = canon
-        if segs and c.get("segment_sum_to") not in ("revenue", "total_income"):
-            problems.append(f"company {cid}: segment_sum_to must be revenue or total_income")
+        if segs and c.get("segment_sum_to") not in ("revenue", "total_income", "segment_total"):
+            problems.append(f"company {cid}: segment_sum_to must be revenue, total_income or segment_total")
 
 
 def _check_thresholds(groups, problems):

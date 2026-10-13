@@ -76,7 +76,8 @@ companies:
     tests: Multiple segments + very different disclosure structure
     financial_year: Apr-Mar
     basis: consolidated
-    segment_sum_to: revenue   # after inter-segment eliminations
+    segment_sum_to: segment_total   # segment revenue is "Value of Sales & Services", incl. GST; revenue from
+                                    # operations is net of GST, which is not tagged, so only segments -> total is checked
     segments:
       O2C: ["Oil to Chemicals (O2C)"]
       Oil and Gas: ["Oil and Gas"]

@@ -12,10 +12,10 @@ import argparse
 import pathlib
 import sys
 
-from copilot import config, db, estimates, ingest, pdf_extract, xbrl_extract
+from copilot import compare, config, db, estimates, ingest, pdf_extract, verify, xbrl_extract
 
 # Company/quarter subcommands and the procedure step that builds them
-STEPS = {"ingest": "Step 4", "run": "Steps 5-9 (Steps 5-7 so far)", "export": "Step 10"}
+STEPS = {"ingest": "Step 4", "run": "Steps 5-9 (Steps 5-8 so far)", "export": "Step 10"}
 PENDING = {"export"}
 
 
@@ -65,7 +65,28 @@ def main(argv=None):
     if args.command == "run":
         code = report_run(xbrl_extract.run(conn, cfg, args.company, args.quarter))
         code = max(code, report_kpis(pdf_extract.run(conn, cfg, args.company, args.quarter)))
-        return max(code, report_estimates(conn, cfg, args))
+        code = max(code, report_estimates(conn, cfg, args))
+        return max(code, report_checks(conn, verify.run(conn, cfg, args.company, args.quarter),
+                                       compare.run(conn, cfg, args.company, args.quarter)))
+
+
+def report_checks(conn, checks, comps):
+    print()
+    print(f"{'company':<11}{'period':<8}{'verified':>9}{'low conf':>9}{'missing':>8}")
+    for (c, p), n in checks.items():
+        print(f"{c:<11}{p:<8}{n.get('verified', 0):>9}{n.get('low_confidence', 0):>9}{n.get('missing', 0):>8}")
+    low = conn.execute("SELECT company, period, metric, segment, note FROM figures"
+                       " WHERE status = 'low_confidence' AND method != 'derived' ORDER BY company, period").fetchall()
+    for r in low:
+        print(f"  low confidence  {r['company']} {r['period']} {r['metric']} {r['segment'] or ''}: "
+              f"{(r['note'] or '').split(verify.MARK)[-1]}")
+    print()
+    print(f"{'company':<11}{'report':<8}{'compared':>9}{'gaps':>6}{'low':>6}{'medium':>7}{'high':>6}{'n.m.':>6}"
+          f"{'no current':>11}")
+    for (c, t), s in comps.items():
+        print(f"{c:<11}{t:<8}{s['comparisons']:>9}{s['gaps']:>6}{s['low']:>6}{s['medium']:>7}{s['high']:>6}"
+              f"{s['n.m.']:>6}{s['missing_current']:>11}")
+    return 0
 
 
 def report_estimates(conn, cfg, args):
