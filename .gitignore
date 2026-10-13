@@ -4,3 +4,6 @@ __pycache__/
 .pytest_cache/
 output/*
 !output/.gitkeep
+
+# Internal documents kept out of the public repository
+*.docx

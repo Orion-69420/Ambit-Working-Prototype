@@ -5,7 +5,7 @@ A local, rule-based prototype by IFSA IIT Kharagpur for Ambit. For each company 
 - Scope and decisions: [docs/step1_scope.md](docs/step1_scope.md)
 - Metric dictionary: [docs/step3_metrics.md](docs/step3_metrics.md) and `config/metrics.yaml`
 - Step records: [docs/](docs/) (step4_ingest, step5_xbrl, step6_kpis, step7_estimates, step8_verify_compare, review_after_step8, step9_commentary, step10_report)
-- Procedure: `Ambit_Phase1_Procedure.docx` (Phase 1 implementation procedure)
+- Procedure: `Ambit_Phase1_Procedure.docx` (internal; kept out of this public repository)
 
 ## Setup
 
