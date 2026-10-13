@@ -29,15 +29,15 @@ Notes on coverage:
 | Titan | Jewellery secondary sales growth, overall (Tanishq, Mia, Zoya, domestic) | Presentation table | pp |
 | Titan | Jewellery like-to-like secondary growth | Presentation table | pp |
 | Asian Paints | Decorative India volume growth | Presentation chart | pp |
-| Asian Paints | Gross margin (standalone) | Presentation chart | bps |
+| Asian Paints | Standalone gross margin | Presentation chart | bps |
 | M&M | SUV volumes ('000) | Presentation chart; Q4 FY26 values come from the Q1 FY27 deck | % |
 | M&M | SUV revenue market share | Presentation chart | bps |
 | Infosys | Constant-currency revenue growth (YoY) | Fact sheet in the results bundle | pp |
-| Infosys | Utilisation, excluding trainees | Fact sheet | bps |
+| Infosys | Utilisation excluding trainees | Fact sheet | bps |
 | Infosys | Voluntary attrition (last 12 months) | Fact sheet | bps |
 | Reliance | Jio ARPU (₹ per month) | Presentation table | % |
 | Reliance | Jio customer base (Mn) | Presentation table | % |
-| Reliance | Jio per-capita data use (GB per month) | Presentation table | % |
+| Reliance | Jio per-capita data consumption (GB per month) | Presentation table | % |
 
 ## How a change is graded
 
