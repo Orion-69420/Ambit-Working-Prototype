@@ -188,3 +188,15 @@ def test_annual_only_metrics_recorded_as_gaps(setup):
     rows = conn.execute("SELECT metric, status, note FROM figures WHERE metric IN ('operating_cash_flow', 'capex')").fetchall()
     assert {r[0] for r in rows} == {"operating_cash_flow", "capex"}
     assert all(r[1] == "missing" and "full-year" in r[2] for r in rows)
+
+
+def test_register_raw_xml_reader():
+    import sys, pathlib
+    sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent / "scripts"))
+    import verify_register as vr
+    xml = ('<xbrli:context id="OneD"><xbrli:period><xbrli:startDate>2026-04-01</xbrli:startDate>'
+           '<xbrli:endDate>2026-06-30</xbrli:endDate></xbrli:period></xbrli:context>'
+           '<in-capmkt:RevenueFromOperations contextRef="OneD" unitRef="INR">581875700000</in-capmkt:RevenueFromOperations>')
+    assert vr.raw_fact(xml, "RevenueFromOperations", "OneD") == "581875700000"
+    assert vr.raw_by_element(xml, "RevenueFromOperations", "2026-04-01", "2026-06-30") == "581875700000"
+    assert vr.raw_fact(xml, "RevenueFromOperations", "Other") is None
