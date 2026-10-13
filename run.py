@@ -12,10 +12,10 @@ import argparse
 import pathlib
 import sys
 
-from copilot import config, db, ingest, pdf_extract, xbrl_extract
+from copilot import config, db, estimates, ingest, pdf_extract, xbrl_extract
 
 # Company/quarter subcommands and the procedure step that builds them
-STEPS = {"ingest": "Step 4", "run": "Steps 5-9 (Steps 5-6 so far)", "export": "Step 10"}
+STEPS = {"ingest": "Step 4", "run": "Steps 5-9 (Steps 5-7 so far)", "export": "Step 10"}
 PENDING = {"export"}
 
 
@@ -64,7 +64,24 @@ def main(argv=None):
         return report_ingest(ingest.run(conn, args.company, args.quarter))
     if args.command == "run":
         code = report_run(xbrl_extract.run(conn, cfg, args.company, args.quarter))
-        return max(code, report_kpis(pdf_extract.run(conn, cfg, args.company, args.quarter)))
+        code = max(code, report_kpis(pdf_extract.run(conn, cfg, args.company, args.quarter)))
+        return max(code, report_estimates(conn, cfg, args))
+
+
+def report_estimates(conn, cfg, args):
+    try:
+        ests, before, after = estimates.run(conn, cfg, args.company, args.quarter)
+    except (estimates.ModelError, config.ConfigError) as e:
+        print(f"ESTIMATES FAILED: {e}", file=sys.stderr)
+        return 1
+    missing = [e for e in ests if e["value"] is None]
+    sample = " (SAMPLE)" if ests and ests[0]["is_sample"] else ""
+    print()
+    print(f"estimates{sample}: {len(ests)} read, {len(missing)} without a cached value; "
+          f"model hash {before[:12]} unchanged: {before == after}")
+    for e in missing:
+        print(f"  missing  {e['company']} {e['quarter']} {e['metric']} {e['segment'] or ''} ({e['sheet']}!{e['cell']})")
+    return 0
 
 
 def report_kpis(results):

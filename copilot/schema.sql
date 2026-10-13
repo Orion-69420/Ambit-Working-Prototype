@@ -57,6 +57,7 @@ CREATE TABLE IF NOT EXISTS estimates (
     company       TEXT NOT NULL,
     quarter       TEXT NOT NULL,
     metric        TEXT NOT NULL,
+    segment       TEXT,                             -- NULL for company-level estimates
     value         TEXT,                             -- exact decimal; NULL = no cached value
     unit          TEXT NOT NULL,
     sheet         TEXT NOT NULL,

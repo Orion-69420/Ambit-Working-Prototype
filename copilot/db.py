@@ -40,15 +40,17 @@ def init_db(path=DEFAULT_DB):
 def _migrate(conn):
     """Bring an older database up to the current schema.
 
-    Step 5 added figures.note and the 'extracted' status. SQLite cannot change a CHECK
-    constraint in place, so an empty figures table is dropped and recreated by the schema.
+    Step 5 added figures.note and the 'extracted' status; Step 7 added estimates.segment.
+    SQLite cannot change a CHECK constraint in place, so an empty table is dropped and
+    recreated by the schema.
     """
-    cols = {r["name"] for r in conn.execute("PRAGMA table_info(figures)")}
-    if cols and "note" not in cols:
-        if conn.execute("SELECT count(*) FROM figures").fetchone()[0]:
-            raise RuntimeError("figures table predates Step 5 and is not empty; rebuild the database")
-        conn.execute("DROP TABLE figures")
-        audit(conn, "schema_migrated", "figures", {"added": ["note", "status 'extracted'"]})
+    for table, column, step in (("figures", "note", "Step 5"), ("estimates", "segment", "Step 7")):
+        cols = {r["name"] for r in conn.execute(f"PRAGMA table_info({table})")}
+        if cols and column not in cols:
+            if conn.execute(f"SELECT count(*) FROM {table}").fetchone()[0]:
+                raise RuntimeError(f"{table} table predates {step} and is not empty; rebuild the database")
+            conn.execute(f"DROP TABLE {table}")
+            audit(conn, "schema_migrated", table, {"added": column})
 
 
 def to_db(value):
