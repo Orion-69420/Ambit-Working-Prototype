@@ -85,20 +85,16 @@ companies:
       unit: inr_crore
       Q4FY26: D19
       Q1FY27: E19
-    - metric: net_debt
-      segment: null
-      unit: inr_crore
-      Q4FY26: D20
     - metric: titan_secondary_growth
+      segment: null
+      unit: pct_growth
+      Q4FY26: D20
+      Q1FY27: E20
+    - metric: titan_ltl_growth
       segment: null
       unit: pct_growth
       Q4FY26: D21
       Q1FY27: E21
-    - metric: titan_ltl_growth
-      segment: null
-      unit: pct_growth
-      Q4FY26: D22
-      Q1FY27: E22
   ASIANPAINT:
     sheet: ASIANPAINT
     estimate_date:

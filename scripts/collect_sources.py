@@ -72,7 +72,7 @@ def pick(company):
         orig = [f for f in cons if f["type_Sub"] == "Original"]
         if not orig:
             out[q] = {t: "no consolidated XBRL filing on NSE" for t in
-                      ("xbrl", "results_release", "presentation", "transcript")}
+                      ("xbrl", "results_release", "presentation", "transcript", "press_release")}
             continue
         x = orig[0]
         rd = d(x["creation_Date"][:11], "%d-%b-%Y")  # results date anchors the other picks
@@ -101,6 +101,11 @@ def pick(company):
         pr = [a for a in anns if near(a, -1, 3) and a["desc"] == "Investor Presentation"]
         res["presentation"] = max(pr, key=size_kb) if pr else (
             NO_PRESENTATION.get(company, "no investor presentation filed on NSE"))
+
+        # Results press release: a text-based second source for the cross-source check (added after Step 8)
+        ps = [a for a in anns if near(a, 0, 1) and a["desc"] == "Press Release"
+              and re.search(r"result|financial|performance", a["_text"], re.I)]
+        res["press_release"] = max(ps, key=size_kb) if ps else "no results press release filed on NSE"
 
         tr = [a for a in anns if near(a, 0, 25) and re.search(r"transcript", a["_text"], re.I)
               and not NOT_TRANSCRIPT.search(a["_text"])]

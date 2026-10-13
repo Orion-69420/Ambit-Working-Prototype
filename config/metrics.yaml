@@ -210,7 +210,7 @@ metrics:
     type: input
     unit: inr_crore
     period: point_in_time
-    applies_to: [TITAN, ASIANPAINT, INFY, RELIANCE]
+    applies_to: [ASIANPAINT, INFY, RELIANCE]
     sources:
       xbrl: [BorrowingsCurrent]
 
@@ -220,7 +220,7 @@ metrics:
     type: input
     unit: inr_crore
     period: point_in_time
-    applies_to: [TITAN, ASIANPAINT, INFY, RELIANCE]
+    applies_to: [ASIANPAINT, INFY, RELIANCE]
     sources:
       xbrl: [BorrowingsNoncurrent]
 
@@ -230,7 +230,7 @@ metrics:
     type: input
     unit: inr_crore
     period: point_in_time
-    applies_to: [TITAN, ASIANPAINT, INFY, RELIANCE]
+    applies_to: [ASIANPAINT, INFY, RELIANCE]
     sources:
       xbrl: [CashAndCashEquivalents]
 
@@ -239,7 +239,8 @@ metrics:
     definition: >-
       Current + non-current borrowings - cash and cash equivalents, as at quarter end.
       Disclosed only at 31 March, so Phase 1 shows it for Q4 FY26 (vs Q4 FY25) only.
-      Not shown for M&M (consolidated borrowings include Mahindra Finance's lending book).
+      Not shown for M&M (consolidated borrowings include Mahindra Finance's lending book) or Titan
+      (borrowings are mostly gold metal loans that fund jewellery inventory); decided 13 Oct.
     type: derived
     formula: borrowings_current + borrowings_noncurrent - cash_equivalents
     inputs: [borrowings_current, borrowings_noncurrent, cash_equivalents]
@@ -247,7 +248,7 @@ metrics:
     period: point_in_time
     change_as: pct
     threshold_group: profit
-    applies_to: [TITAN, ASIANPAINT, INFY, RELIANCE]
+    applies_to: [ASIANPAINT, INFY, RELIANCE]
     sources: {}
 
   - id: operating_cash_flow

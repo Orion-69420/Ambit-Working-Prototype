@@ -13,6 +13,8 @@ Changes
   bps  change in basis points = (current - comparator) x 100 (margins and other % levels)
   pp   change in percentage points = current - comparator (growth rates)
 Severity uses the value as stored (rounded to 2 decimals), so boundaries grade consistently.
+Moves against the estimate use the main bands; prior and year-ago moves use the looser `period`
+bands in thresholds.yaml.
 """
 from decimal import ROUND_HALF_UP, Decimal
 
@@ -21,10 +23,15 @@ from copilot import config, db
 D2 = Decimal("0.01")
 
 
-def severity(size, group):
-    """size: absolute change in the group's unit. low < low_below <= medium <= high_above < high."""
+def severity(size, group, comparator="estimate"):
+    """size: absolute change in the group's unit. low < low_below <= medium <= high_above < high.
+
+    Moves against the prior and year-ago quarters use the group's looser `period` bands.
+    """
     if size is None:
         return None
+    if comparator in ("prior", "year_ago"):
+        group = group["period"]
     size = abs(size)
     if size < Decimal(str(group["low_below"])):
         return "low"
@@ -123,7 +130,7 @@ def run(conn, cfg, company="all", quarter="all", user=None):
                             s["gaps"] += 1
                             continue
                         ch = change(a, db.from_db(base_row["value"]), m["change_as"])
-                        sev = severity(ch["size"], group) if not ch["not_meaningful"] else None
+                        sev = severity(ch["size"], group, kind) if not ch["not_meaningful"] else None
                         conn.execute("INSERT INTO comparisons (figure_id, comparator, comparator_figure_id,"
                                      " comparator_estimate_id, change, change_pct, change_bps, not_meaningful,"
                                      " severity) VALUES (?,?,?,?,?,?,?,?,?)",

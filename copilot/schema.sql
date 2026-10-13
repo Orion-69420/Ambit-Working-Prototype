@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS documents (
     id               INTEGER PRIMARY KEY,
     company          TEXT NOT NULL,
     quarter          TEXT NOT NULL,                 -- e.g. Q1FY27
-    type             TEXT NOT NULL CHECK (type IN ('xbrl', 'results_release', 'presentation', 'transcript', 'analyst_model')),
+    type             TEXT NOT NULL CHECK (type IN ('xbrl', 'results_release', 'presentation', 'transcript', 'press_release', 'analyst_model')),
     file_path        TEXT NOT NULL,
     sha256           TEXT NOT NULL,
     source_url       TEXT,

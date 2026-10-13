@@ -13,10 +13,10 @@ Done when: every document has an ID and a hash, and every PDF page's text is sto
 
 | | Count |
 |---|---|
-| Documents registered (ID + SHA-256) | 73: 25 XBRL, 25 results releases, 15 transcripts, 8 presentations |
+| Documents registered (ID + SHA-256) | 73 in Step 4 (25 XBRL, 25 results releases, 15 transcripts, 8 presentations). Now 77: Step 6 added 3 Titan decks and Step 7 the analyst model |
 | Register entries not ingested | 2 Infosys presentations. Missing by decision: KPIs come from the fact sheet |
-| PDF pages stored | 2,741 (numbered from 1, as in a PDF viewer) |
-| Pages flagged as scanned | 153, in 12 documents |
+| PDF pages stored | 2,741 in Step 4; 2,941 with the Titan decks (numbered from 1, as in a PDF viewer) |
+| Pages flagged as scanned | 153 in 12 documents in Step 4; 215 in 14 with the Titan decks (Titan Q1 FY26 is almost entirely scanned) |
 | Audit log | One `document_ingested` entry per document, with its hash, plus `scanned_pages_flagged` per affected document |
 
 How ingestion behaves:

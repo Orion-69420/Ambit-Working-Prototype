@@ -2,6 +2,8 @@
 
 Status: **Done (13 Oct).** Built with a **sample** model, because no real analyst model is available.
 
+**Update after the Step 8 review:** the model was rebuilt without Titan net debt. It now holds **165 estimates** and has a new hash; the counts below are from the first build.
+
 To rebuild the sample model (needed only if the figures change):
 
 ```

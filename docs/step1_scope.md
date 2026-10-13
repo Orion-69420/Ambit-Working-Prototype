@@ -1,6 +1,6 @@
 # Step 1: Lock scope and collect documents
 
-Status: **Done (13 Oct).** Scope is locked. Documents: 73 collected, and the 2 missing are covered by another source.
+Status: **Done (13 Oct).** Scope is locked. Documents: 76 collected (73 in Step 1, plus 3 Titan comparator decks added in Step 6), and the 2 missing are covered by another source.
 
 Done when: the sample is locked, and every required document is either in `data/` or listed as missing in `config/sources.yaml`. Ambit sign-off is not required for this prototype.
 
@@ -70,7 +70,7 @@ KPI notes:
 
 ## Document collection
 
-The register is `config/sources.yaml` (75 entries). For each company it lists:
+The register is `config/sources.yaml` (75 entries in Step 1; 78 after Step 6 added Titan's three comparator decks). For each company it lists:
 - XBRL and results release for all 5 quarters
 - Presentation for the 2 target quarters
 - Transcripts for Q3 FY26, Q4 FY26 and Q1 FY27

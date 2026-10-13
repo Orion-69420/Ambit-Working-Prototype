@@ -44,6 +44,7 @@ def _migrate(conn):
     SQLite cannot change a CHECK constraint in place, so an empty table is dropped and
     recreated by the schema.
     """
+    _migrate_document_types(conn)
     for table, column, step in (("figures", "note", "Step 5"), ("estimates", "segment", "Step 7")):
         cols = {r["name"] for r in conn.execute(f"PRAGMA table_info({table})")}
         if cols and column not in cols:
@@ -51,6 +52,33 @@ def _migrate(conn):
                 raise RuntimeError(f"{table} table predates {step} and is not empty; rebuild the database")
             conn.execute(f"DROP TABLE {table}")
             audit(conn, "schema_migrated", table, {"added": column})
+
+
+def _migrate_document_types(conn):
+    """The review after Step 8 added the 'press_release' document type.
+
+    The documents table holds rows other tables point to, so it is rebuilt in place: copy the
+    rows into a table with the new constraint, then swap it in. References by id stay valid.
+    """
+    row = conn.execute("SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'documents'").fetchone()
+    if row is None or "press_release" in row[0]:
+        return
+    new_sql = row[0].replace("'transcript', 'analyst_model'", "'transcript', 'press_release', 'analyst_model'")
+    new_sql = new_sql.replace("CREATE TABLE documents", "CREATE TABLE documents_new", 1)
+    conn.execute("PRAGMA foreign_keys = OFF")
+    try:
+        conn.execute("BEGIN")
+        conn.execute(new_sql)
+        conn.execute("INSERT INTO documents_new SELECT * FROM documents")
+        conn.execute("DROP TABLE documents")
+        conn.execute("ALTER TABLE documents_new RENAME TO documents")
+        conn.execute("COMMIT")
+    except Exception:
+        conn.execute("ROLLBACK")
+        raise
+    finally:
+        conn.execute("PRAGMA foreign_keys = ON")
+    audit(conn, "schema_migrated", "documents", {"added": "type 'press_release'", "rows_kept": True})
 
 
 def to_db(value):

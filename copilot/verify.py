@@ -9,8 +9,8 @@ Checks
   period     figure's period is a known quarter; XBRL context is three months  -> low confidence
   basis      figure basis matches the metric's configured basis                -> low confidence
   unit       XBRL unit is INR (money) or INR per share (EPS)                   -> low confidence
-  cross      XBRL revenue / PAT appears in that quarter's results release, or in a later
-             release's comparator columns (decided 13 Oct)                    -> low confidence
+  cross      XBRL revenue / PAT appears in that quarter's results release or press release, or
+             in a later release's comparator columns (decided 13 Oct)         -> low confidence
   segments   segment revenues - inter-segment = segment total = revenue (or total income; for
              Reliance, whose segment revenue includes GST, only the first equality)
                                                                                -> low confidence
@@ -92,17 +92,21 @@ def _page(conn, doc_id, page, cache):
 
 
 def cross_source(conn, company, period, value):
-    """Pages of the same quarter's results release, or of a later one, that show the value."""
+    """(quarter, document type, page) of a results release or press release showing the value.
+
+    Searched in order: the quarter's own results release, its own press release, then later
+    quarters' releases (their comparator columns). Returns None if no document shows it.
+    """
     order = {q: i for i, q in enumerate(config.QUARTERS)}
-    docs = conn.execute("SELECT id, quarter FROM documents WHERE company = ? AND type = 'results_release'",
-                        (company,)).fetchall()
-    for d in sorted(docs, key=lambda d: (d["quarter"] != period, order.get(d["quarter"], 99))):
-        if d["quarter"] != period and order.get(d["quarter"], -1) <= order[period]:
-            continue
+    docs = conn.execute("SELECT id, quarter, type FROM documents WHERE company = ?"
+                        " AND type IN ('results_release', 'press_release')", (company,)).fetchall()
+    docs = [d for d in docs if d["quarter"] == period or order.get(d["quarter"], -1) > order[period]]
+    for d in sorted(docs, key=lambda d: (d["quarter"] != period, order.get(d["quarter"], 99),
+                                         d["type"] != "results_release")):
         texts = conn.execute("SELECT page, text FROM pages WHERE document_id = ?", (d["id"],)).fetchall()
         hits = on_text(value, texts)
         if hits:
-            return d["quarter"], hits[0]
+            return d["quarter"], d["type"], hits[0]
     return None
 
 
@@ -155,9 +159,10 @@ def run(conn, cfg, company="all", quarter="all", user=None):
                 if f["method"] == "xbrl" and f["metric"] in CROSS_METRICS and f["segment"] is None:
                     hit = cross_source(conn, c, p, f["value"])
                     if hit is None:
-                        fails.append("not found in the results release (cross-source)")
-                    elif hit[0] != p:
-                        base_note = _join(base_note, f"cross-checked in the {hit[0]} release, p{hit[1]}")
+                        fails.append("not found in the results release or press release (cross-source)")
+                    elif hit[0] != p or hit[1] != "results_release":
+                        kind = "results release" if hit[1] == "results_release" else "press release"
+                        base_note = _join(base_note, f"cross-checked in the {hit[0]} {kind}, p{hit[2]}")
                 results[f["id"]] = ("low_confidence" if fails else "verified", base_note, fails)
             reason = segment_sum(rows, cfg.companies[c])
             if reason:

@@ -944,3 +944,133 @@ documents:
   status: collected
   url: https://nsearchives.nseindia.com/corporate/TITAN_07082025172844_SEinvestorpresentationQ1.pdf
   sha256: c0356b6beb1d940d402cb38d9125799e9385c3b9c0f4b7831521cff18b583a6f
+- company: TITAN
+  quarter: Q4FY25
+  period:
+    start: '2025-01-01'
+    end: '2025-03-31'
+  role: cross_check
+  type: press_release
+  path: null
+  publication_date: null
+  status: missing
+  note: Second source for the cross-source check (added after the Step 8 review)
+  reason: no results press release filed on NSE
+  url: null
+  sha256: null
+- company: TITAN
+  quarter: Q1FY26
+  period:
+    start: '2025-04-01'
+    end: '2025-06-30'
+  role: cross_check
+  type: press_release
+  path: null
+  publication_date: null
+  status: missing
+  note: Second source for the cross-source check (added after the Step 8 review)
+  reason: no results press release filed on NSE
+  url: null
+  sha256: null
+- company: TITAN
+  quarter: Q3FY26
+  period:
+    start: '2025-10-01'
+    end: '2025-12-31'
+  role: cross_check
+  type: press_release
+  path: null
+  publication_date: null
+  status: missing
+  note: Second source for the cross-source check (added after the Step 8 review)
+  reason: no results press release filed on NSE
+  url: null
+  sha256: null
+- company: TITAN
+  quarter: Q4FY26
+  period:
+    start: '2026-01-01'
+    end: '2026-03-31'
+  role: cross_check
+  type: press_release
+  path: null
+  publication_date: null
+  status: missing
+  note: Second source for the cross-source check (added after the Step 8 review)
+  reason: no results press release filed on NSE
+  url: null
+  sha256: null
+- company: TITAN
+  quarter: Q1FY27
+  period:
+    start: '2026-04-01'
+    end: '2026-06-30'
+  role: cross_check
+  type: press_release
+  path: null
+  publication_date: null
+  status: missing
+  note: Second source for the cross-source check (added after the Step 8 review)
+  reason: no results press release filed on NSE
+  url: null
+  sha256: null
+- company: RELIANCE
+  quarter: Q4FY25
+  period:
+    start: '2025-01-01'
+    end: '2025-03-31'
+  role: cross_check
+  type: press_release
+  path: data/RELIANCE/Q4FY25/press_release.pdf
+  publication_date: '2025-04-25'
+  status: collected
+  url: https://nsearchives.nseindia.com/corporate/kavinavora_25042025200953_SE_Media_release.pdf
+  sha256: 0fab708efdc04baea122f4430dee88f4492fe4bceb2e180eecdbd9ca01b77d7c
+- company: RELIANCE
+  quarter: Q1FY26
+  period:
+    start: '2025-04-01'
+    end: '2025-06-30'
+  role: cross_check
+  type: press_release
+  path: data/RELIANCE/Q1FY26/press_release.pdf
+  publication_date: '2025-07-18'
+  status: collected
+  url: https://nsearchives.nseindia.com/corporate/kavinavora_18072025193938_SE_MR.pdf
+  sha256: 6968c047e8dd2e1b25709ee3d1013a51d1b5f0180a26e1d80c72faa53b751776
+- company: RELIANCE
+  quarter: Q3FY26
+  period:
+    start: '2025-10-01'
+    end: '2025-12-31'
+  role: cross_check
+  type: press_release
+  path: data/RELIANCE/Q3FY26/press_release.pdf
+  publication_date: '2026-01-16'
+  status: collected
+  url: https://nsearchives.nseindia.com/corporate/kavinavora_16012026192013_MR_file.pdf
+  sha256: c396a4551d6f6a02aa443c67cdc7f36c30f9e4d719021b21dcb992a0549863a9
+- company: RELIANCE
+  quarter: Q4FY26
+  period:
+    start: '2026-01-01'
+    end: '2026-03-31'
+  role: cross_check
+  type: press_release
+  path: data/RELIANCE/Q4FY26/press_release.pdf
+  publication_date: '2026-04-24'
+  status: collected
+  url: https://nsearchives.nseindia.com/corporate/kavinavora_24042026193424_SE_24042026_MR.pdf
+  sha256: 7660027575f83e8e016923de950f1e0e0076f227c994d2dd46c2e56ef33ec984
+- company: RELIANCE
+  quarter: Q1FY27
+  period:
+    start: '2026-04-01'
+    end: '2026-06-30'
+  role: cross_check
+  type: press_release
+  path: data/RELIANCE/Q1FY27/press_release.pdf
+  publication_date: '2026-07-17'
+  status: collected
+  url: https://nsearchives.nseindia.com/corporate/kavinavora_17072026191923_SE_MR_1.pdf
+  sha256: d619afc40092e152aab5938e6be9821da21f9266c665de83cd08de44de188014

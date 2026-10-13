@@ -6,6 +6,13 @@ Status: **Done (13 Oct).** Part of the normal run:
 python run.py run --company all --quarter all
 ```
 
+**Updated by the review after Step 8** (`docs/review_after_step8.md`):
+- Prior and year-ago moves are graded on looser `period` bands.
+- Titan net debt is no longer shown.
+- Results press releases are also searched by the cross-source check.
+
+The severity table below is from before that review; the review record has the current one.
+
 Done when: every metric for every company-quarter has its comparisons or a recorded gap. **Checked: all 190 report rows across the 10 reports pass.**
 
 ## Automated checks (`copilot/verify.py`)

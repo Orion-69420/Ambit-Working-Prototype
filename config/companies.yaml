@@ -15,6 +15,12 @@ companies:
     financial_year: Apr-Mar
     basis: consolidated
     segment_sum_to: total_income   # Titan's segment revenue includes other income
+    report_notes:                  # shown in the Change Report header (decided 13 Oct)
+      - >-
+        Revenue from operations includes bullion sales and other operating revenue, which vary
+        sharply by quarter (for example ₹6,313 crore of other operating revenue in Q4 FY26 against
+        ₹1,019 crore in Q4 FY25), so revenue changes partly reflect bullion, not jewellery demand.
+      - Net debt is not shown; Titan's borrowings are mostly gold metal loans that fund jewellery inventory.
     segments:
       Jewellery: ["Jewellery", "Jewellery (refer note 4)"]
       Watches: ["Watches", "Watches and Wearables"]   # renamed from Q1 FY26; same segment (verify values in Step 5)
@@ -39,6 +45,9 @@ companies:
     sector: Auto
     tests: Multiple businesses/segments + complex financial reporting
     note: Consolidated includes Mahindra Finance (NBFC); NBFC metrics stay out of scope
+    report_notes:
+      - Net debt is not shown; consolidated borrowings include Mahindra Finance's lending book.
+      - Q4 FY26 SUV volumes and market share are read from the Q1 FY27 investor presentation (published 30 Jul 2026), because the Q4 FY26 presentation shows annual figures only.
     financial_year: Apr-Mar
     basis: consolidated
     segment_sum_to: revenue

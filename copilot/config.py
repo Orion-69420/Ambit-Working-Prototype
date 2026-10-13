@@ -35,7 +35,7 @@ METRIC_TYPES = {"reported", "derived", "input"}
 PERIODS = {"quarter", "point_in_time", "annual_only"}
 CHANGE_AS = {"pct", "bps", "pp"}
 BASES = {"consolidated", "standalone"}
-DOC_TYPES = {"xbrl", "results_release", "presentation", "transcript"}
+DOC_TYPES = {"xbrl", "results_release", "presentation", "transcript", "press_release"}
 FORMULA = re.compile(r"^[a-z0-9_+\-*/(). ]+$")
 NAME = re.compile(r"[a-z_][a-z0-9_]*")
 
@@ -118,6 +118,9 @@ def _check_companies(comps, problems):
                 problems.append(f"company {cid}: missing {field}")
         if c.get("basis") and c["basis"] not in BASES:
             problems.append(f"company {cid}: unknown basis {c['basis']!r}")
+        notes = c.get("report_notes", [])
+        if not isinstance(notes, list) or not all(isinstance(n, str) and n.strip() for n in notes):
+            problems.append(f"company {cid}: report_notes must be a list of non-empty strings")
         segs = c.get("segments")
         if segs is None:
             problems.append(f"company {cid}: missing segments (use {{}} for a single-segment company)")
@@ -138,9 +141,10 @@ def _check_thresholds(groups, problems):
     for g, b in groups.items():
         if b.get("unit") not in CHANGE_AS:
             problems.append(f"threshold group {g}: unknown unit {b.get('unit')!r}")
-        lo, hi = b.get("low_below"), b.get("high_above")
-        if not isinstance(lo, (int, float)) or not isinstance(hi, (int, float)) or not 0 < lo <= hi:
-            problems.append(f"threshold group {g}: need 0 < low_below <= high_above, got {lo}, {hi}")
+        for label, bands in (("", b), (" period", b.get("period") or {})):
+            lo, hi = bands.get("low_below"), bands.get("high_above")
+            if not isinstance(lo, (int, float)) or not isinstance(hi, (int, float)) or not 0 < lo <= hi:
+                problems.append(f"threshold group {g}{label}: need 0 < low_below <= high_above, got {lo}, {hi}")
 
 
 def _check_metric(m, metrics, units, thresholds, comps, problems):

@@ -1,13 +1,27 @@
-# Severity bands (Step 3). Severity grades the size of a move, not whether it is good or bad.
-# Applied to the absolute change, in the group's unit. Same bands for QoQ, YoY and vs estimate,
-# and for every sector (decided 13 Oct).
+# Severity bands. Severity grades the size of a move, not whether it is good or bad.
+# Applied to the absolute change, in the group's unit, for every sector (decided 13 Oct).
 #   low:    change < low_below
 #   medium: low_below <= change <= high_above
 #   high:   change > high_above
+#
+# The main bands grade moves against the analyst's ESTIMATE (these feed the headline summary).
+# `period` bands grade moves against the PRIOR QUARTER and YEAR-AGO quarter. They are looser
+# because ordinary growth would otherwise grade most period moves High (decided 13 Oct, after
+# the Step 8 review: 79% of year-ago and 52% of prior-quarter moves were High on one set of bands).
 
 groups:
-  revenue:        {unit: pct, low_below: 2,  high_above: 5,   applies: "Revenue, segment revenue"}
-  profit:         {unit: pct, low_below: 5,  high_above: 10,  applies: "EBITDA, segment result, PAT, EPS, net debt, cash flow"}
-  margins:        {unit: bps, low_below: 50, high_above: 150, applies: "Margins and other % levels (gross margin, utilisation, attrition, market share)"}
-  operating_kpis: {unit: pct, low_below: 5,  high_above: 10,  applies: "Volume and count KPIs (SUV volumes, Jio ARPU, customers, data)"}
-  rate_kpis:      {unit: pp,  low_below: 2,  high_above: 5,   applies: "Growth rates disclosed by the company (Titan growth, AP volume growth, Infosys CC growth)"}
+  revenue:
+    {unit: pct, low_below: 2, high_above: 5, period: {low_below: 5, high_above: 15},
+     applies: "Revenue, segment revenue"}
+  profit:
+    {unit: pct, low_below: 5, high_above: 10, period: {low_below: 10, high_above: 25},
+     applies: "EBITDA, segment result, PAT, EPS, net debt, cash flow"}
+  margins:
+    {unit: bps, low_below: 50, high_above: 150, period: {low_below: 100, high_above: 300},
+     applies: "Margins and other % levels (gross margin, utilisation, attrition, market share)"}
+  operating_kpis:
+    {unit: pct, low_below: 5, high_above: 10, period: {low_below: 10, high_above: 20},
+     applies: "Volume and count KPIs (SUV volumes, Jio ARPU, customers, data)"}
+  rate_kpis:
+    {unit: pp, low_below: 2, high_above: 5, period: {low_below: 5, high_above: 10},
+     applies: "Growth rates disclosed by the company (Titan secondary growth, AP volume growth, Infosys CC growth)"}

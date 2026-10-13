@@ -4,8 +4,15 @@ import pytest
 
 from copilot import compare, config, db, verify
 
-GROUPS = {"revenue": {"unit": "pct", "low_below": 2, "high_above": 5},
-          "margins": {"unit": "bps", "low_below": 50, "high_above": 150}}
+GROUPS = {"revenue": {"unit": "pct", "low_below": 2, "high_above": 5, "period": {"low_below": 5, "high_above": 15}},
+          "margins": {"unit": "bps", "low_below": 50, "high_above": 150, "period": {"low_below": 100, "high_above": 300}}}
+
+
+def test_period_comparisons_use_looser_bands():
+    assert compare.severity(D("8"), GROUPS["revenue"], "estimate") == "high"
+    assert compare.severity(D("8"), GROUPS["revenue"], "prior") == "medium"
+    assert compare.severity(D("15.01"), GROUPS["revenue"], "year_ago") == "high"
+    assert compare.severity(D("4.99"), GROUPS["revenue"], "year_ago") == "low"
 
 
 # ---------------------------------------------------------------- changes and grading
@@ -85,7 +92,18 @@ def test_cross_source_passes_on_a_later_release_and_notes_it(setup):
     fid = fig("RELIANCE", "Q4FY26", "revenue", 298621, doc_id=x)
     verify.run(conn, cfg, "RELIANCE", "Q4FY26")
     status, note = conn.execute("SELECT status, note FROM figures WHERE id = ?", (fid,)).fetchone()
-    assert status == "verified" and "Q1FY27 release" in note
+    assert status == "verified" and "Q1FY27 results release" in note
+
+
+def test_cross_source_accepts_press_release(setup):
+    cfg, conn, doc, fig = setup
+    x = doc("RELIANCE", "Q1FY27", "xbrl", [])
+    doc("RELIANCE", "Q1FY27", "results_release", ["OCR text without the figure"])
+    doc("RELIANCE", "Q1FY27", "press_release", ["Net profit attributable to owners of Rs 20,946 crore"])
+    fid = fig("RELIANCE", "Q1FY27", "pat_owners", 20946, doc_id=x)
+    verify.run(conn, cfg, "RELIANCE", "Q1FY27")
+    status, note = conn.execute("SELECT status, note FROM figures WHERE id = ?", (fid,)).fetchone()
+    assert status == "verified" and "press release" in note
 
 
 def test_cross_source_failure_is_low_confidence(setup):

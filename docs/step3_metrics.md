@@ -8,7 +8,7 @@ Done when: every metric has a definition, unit, period type, source mapping and 
 
 | File | Holds |
 |---|---|
-| `config/metrics.yaml` | 30 metrics: 21 shown in reports, 9 inputs used only to derive other metrics. Also the unit registry |
+| `config/metrics.yaml` | 30 metrics in Step 3 (21 shown in reports, 9 inputs used only to derive other metrics); 33 after Step 5 added three reconciliation inputs (total income, inter-segment revenue, segment total). Also the unit registry |
 | `config/companies.yaml` | Companies, and segment name aliases for matching XBRL segment labels |
 | `config/thresholds.yaml` | 5 severity groups |
 | `config/commentary_rules.yaml` | Rules for transcripts: guidance, explanation and flag phrases, negations, and topics per company |
@@ -24,7 +24,7 @@ Done when: every metric has a definition, unit, period type, source mapping and 
 | Basic EPS | XBRL `BasicEarningsLossPerShareFromContinuingAndDiscontinuedOperations` | Reported | % | profit | All |
 | Segment revenue | XBRL `SegmentRevenueFromOperations`, by segment | Reported | % | revenue | Titan, M&M, Infosys, Reliance |
 | Segment result (EBIT) | XBRL `SegmentProfitLossBeforeTaxAndFinanceCosts`, by segment | Reported | % | profit | Titan, M&M, Infosys, Reliance |
-| Net debt | Borrowings − cash (XBRL, 31 March only) | Derived | % | profit | All except M&M; Q4 FY26 only |
+| Net debt | Borrowings − cash (XBRL, 31 March only) | Derived | % | profit | Asian Paints, Infosys, Reliance (not M&M; not Titan, after the Step 8 review); Q4 FY26 only |
 | Operating cash flow, capex | XBRL, full-year only | Reported | — | — | Always listed in Gaps for Phase 1 |
 | Titan: secondary growth (overall), like-to-like growth (changed in Step 6) | Presentation table | Reported | pp | rate_kpis | Titan |
 | Asian Paints: decorative India volume growth | Presentation | Reported | pp | rate_kpis | Asian Paints |
@@ -37,7 +37,7 @@ Done when: every metric has a definition, unit, period type, source mapping and 
 
 **EBITDA** = profit before exceptional items and tax + finance costs + depreciation and amortisation − other income − share of profit of associates and JVs.
 
-**Severity bands**
+**Severity bands** (vs estimate; prior-quarter and year-ago moves use looser `period` bands, added after the Step 8 review: revenue 5 / 15%, profit 10 / 25%, margins 100 / 300 bps, operating KPIs 10 / 20%, rate KPIs 5 / 10 pp)
 
 | Group | Low | Medium | High |
 |---|---|---|---|
