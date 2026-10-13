@@ -4,7 +4,7 @@ A local, rule-based prototype by IFSA IIT Kharagpur for Ambit. For each company 
 
 - Scope and decisions: [docs/step1_scope.md](docs/step1_scope.md)
 - Metric dictionary: [docs/step3_metrics.md](docs/step3_metrics.md) and `config/metrics.yaml`
-- Step records: [docs/](docs/) (step4_ingest, step5_xbrl, step6_kpis, step7_estimates, step8_verify_compare, review_after_step8)
+- Step records: [docs/](docs/) (step4_ingest, step5_xbrl, step6_kpis, step7_estimates, step8_verify_compare, review_after_step8, step9_commentary)
 - Procedure: `Ambit_Phase1_Procedure.docx` (Phase 1 implementation procedure)
 
 ## Setup
@@ -31,7 +31,7 @@ python scripts/collect_sources.py
 ```
 python run.py check-config                            # validate config/*.yaml
 python run.py ingest --company all --quarter all      # register documents, store page text
-python run.py run    --company MM --quarter Q1FY27    # Steps 5-9 (through verify, compare, grade so far)
+python run.py run    --company MM --quarter Q1FY27    # Steps 5-9: extract, estimates, verify, compare, commentary
 python run.py export --company MM --quarter Q1FY27    # Step 10
 ```
 

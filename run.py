@@ -12,10 +12,10 @@ import argparse
 import pathlib
 import sys
 
-from copilot import compare, config, db, estimates, ingest, pdf_extract, verify, xbrl_extract
+from copilot import commentary, compare, config, db, estimates, ingest, pdf_extract, verify, xbrl_extract
 
 # Company/quarter subcommands and the procedure step that builds them
-STEPS = {"ingest": "Step 4", "run": "Steps 5-9 (Steps 5-8 so far)", "export": "Step 10"}
+STEPS = {"ingest": "Step 4", "run": "Steps 5-9", "export": "Step 10"}
 PENDING = {"export"}
 
 
@@ -66,8 +66,30 @@ def main(argv=None):
         code = report_run(xbrl_extract.run(conn, cfg, args.company, args.quarter))
         code = max(code, report_kpis(pdf_extract.run(conn, cfg, args.company, args.quarter)))
         code = max(code, report_estimates(conn, cfg, args))
-        return max(code, report_checks(conn, verify.run(conn, cfg, args.company, args.quarter),
+        code = max(code, report_checks(conn, verify.run(conn, cfg, args.company, args.quarter),
                                        compare.run(conn, cfg, args.company, args.quarter)))
+        return max(code, report_commentary(conn, commentary.run(conn, cfg, args.company, args.quarter), args))
+
+
+def report_commentary(conn, results, args):
+    print()
+    print(f"{'company':<11}{'transcript':<11}{'guidance':>9}{'explain':>8}{'flags':>6}  management speakers")
+    for (c, q), r in results.items():
+        if isinstance(r, str):
+            print(f"{c:<11}{q:<11}  {r}")
+            continue
+        n = {t: sum(s['type'] == t for s in r['statements']) for t in ('guidance', 'explanation', 'flag')}
+        mgmt = sorted({s for s, role in r['speakers'] if role == 'management'})
+        print(f"{c:<11}{q:<11}{n['guidance']:>9}{n['explanation']:>8}{n['flag']:>6}  {', '.join(mgmt)[:70]}")
+    print()
+    print("guidance vs prior quarter (topic: status)")
+    companies = list(config.companies()) if args.company == "all" else [args.company]
+    targets = config.TARGET_QUARTERS if args.quarter == "all" else [q for q in [args.quarter] if q in config.TARGET_QUARTERS]
+    for c in companies:
+        for t in targets:
+            rows = commentary.guidance_table(conn, c, t)
+            print(f"  {c:<11}{t:<8}" + "; ".join(f"{topic}: {st}" for topic, st, _, _ in rows))
+    return 0
 
 
 def report_checks(conn, checks, comps):

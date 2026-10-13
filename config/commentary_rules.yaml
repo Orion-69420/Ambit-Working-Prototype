@@ -1,48 +1,90 @@
 # Transcript rules for Step 9 (keyword-based; the analyst judges meaning).
 # All matching is case-insensitive. Patterns are Python regular expressions.
 
-# Only sentences spoken by management count for guidance and explanations.
-management_markers: ["CEO", "CFO", "Managing Director", "Chief", "President", "Head", "Director"]
-non_management_markers: ["Moderator", "Analyst", "Participant"]
-
 guidance:
-  phrases: ["we expect", "we anticipate", "guidance", "target", "outlook", "we aim", "going forward", "we will", "should be in the range"]
+  # "we will" was dropped: nearly every management sentence uses it, which buried real guidance
+  phrases: ["we expect", "we anticipate", "\\bguidance\\b", "\\bguide\\b", "\\btarget", "\\boutlook\\b",
+            "we aim", "going forward", "expected to", "likely to", "should be in the range", "in the range of"]
 
 explanation:
   phrases: ["due to", "driven by", "on account of", "because of", "led by", "impacted by", "owing to"]
 
+# Sentences that are boilerplate, never guidance (for example the safe-harbour disclaimer).
+exclude: ["forward[- ]looking statements?", "safe harbou?r", "actual results to differ"]
+
 flags:
-  auditor:          ["qualified opinion", "qualification", "emphasis of matter", "auditor (has )?resign", "resignation of (the )?(statutory )?auditor"]
-  restatement:      ["restate", "restatement", "regroup(ed|ing) (of )?prior period"]
+  auditor:          ["qualified opinion", "\\bqualification\\b", "emphasis of matter", "auditors? (has |have )?resign", "resignation of (the )?(statutory )?auditor"]
+  restatement:      ["\\brestate", "restatement", "regroup(ed|ing) (of )?prior period"]
   related_party:    ["related[- ]party transaction"]
-  regulatory:       ["show[- ]cause notice", "SEBI notice", "regulatory notice", "penalty", "tax demand", "enforcement directorate", "investigation"]
+  regulatory:       ["show[- ]cause notice", "SEBI notice", "regulatory notice", "\\bpenalty\\b", "tax demand", "enforcement directorate", "\\binvestigation\\b"]
   accounting_policy: ["change in accounting polic", "change in accounting estimate"]
 
-# A flag is skipped when one of these appears within the same sentence before the match.
-negations: ["no ", "not ", "nil ", "without ", "neither ", "none "]
+# A flag is skipped when one of these appears in the same sentence shortly before the match.
+negations: ["\\bno\\b", "\\bnot\\b", "n't\\b", "\\bnever\\b", "\\bnil\\b", "\\bwithout\\b", "\\bneither\\b", "\\bnone\\b"]
 
-# Topics tie guidance and explanations to tracked metrics. common applies to every company.
+# Topics tie guidance and explanations to tracked metrics. common applies to every company;
+# a company's own topics are tried first.
 topics:
   common:
-    revenue: ["revenue", "sales", "top ?line", "growth"]
+    revenue: ["revenue", "\\bsales\\b", "top ?line", "\\bgrowth\\b"]
     margin: ["margin", "EBITDA", "profitability", "operating leverage"]
     costs: ["raw material", "input cost", "commodity", "inflation", "deflation"]
     capex: ["capex", "capital expenditure", "capacity"]
-    debt: ["debt", "borrowing", "leverage"]
+    debt: ["\\bdebt\\b", "borrowing", "leverage"]
   TITAN:
-    jewellery: ["jewellery", "Tanishq", "gold price", "studded", "same[- ]store", "buyer"]
-    stores: ["store", "network", "expansion"]
+    jewellery: ["jewellery", "Tanishq", "gold price", "studded", "same[- ]store", "like[- ]to[- ]like", "buyer"]
+    stores: ["\\bstores?\\b", "network", "expansion"]
   ASIANPAINT:
     volume: ["volume", "decorative", "demand"]
     gross_margin: ["gross margin"]
   MM:
-    suv: ["SUV", "utility vehicle", "market share", "EV", "electric"]
-    farm: ["tractor", "farm", "monsoon"]
+    suv: ["\\bSUVs?\\b", "utility vehicle", "market share", "\\bEVs?\\b", "electric"]
+    farm: ["tractor", "\\bfarm\\b", "monsoon"]
   INFY:
-    cc_growth: ["constant currency", "CC growth", "revenue guidance"]
-    deals: ["large deal", "TCV", "pipeline"]
+    cc_growth: ["constant currency", "CC growth", "revenue (growth )?guidance"]
+    deals: ["large deal", "\\bTCV\\b", "pipeline"]
     people: ["utili[sz]ation", "attrition", "headcount", "hiring"]
   RELIANCE:
-    o2c: ["O2C", "refining", "cracks", "petrochemical"]
-    jio: ["Jio", "ARPU", "subscriber", "5G", "tariff"]
-    retail: ["Reliance Retail", "store", "footfall"]
+    o2c: ["\\bO2C\\b", "refining", "cracks", "petrochemical"]
+    jio: ["\\bJio\\b", "\\bARPU\\b", "subscriber", "\\b5G\\b", "tariff"]
+    retail: ["Reliance Retail", "\\bretail\\b", "footfall"]
+
+# How each company's transcript marks speakers, who counts as management, and which page
+# header/footer lines to drop. Speaker patterns need a (?P<name>...) group and may fix a role
+# (management / analyst / moderator); otherwise the role comes from the management roster.
+# Rosters are taken from each transcript's own management list (13 Oct); Moderator/Operator
+# lines are the call operator. Anyone else (analysts, journalists) is not management.
+transcripts:
+  default:
+    ignore_lines: ["^\\s*\\d{1,3}\\s*$", "^\\s*Page \\d+ of \\d+\\s*$"]
+  TITAN:
+    speakers:
+      - pattern: '^\s*(?P<name>(?:Mr\.|Ms\.|Mrs\.|Dr\.)?\s*[A-Z][\w.''’-]*(?:\s+[A-Z][\w.''’-]*){0,4})\s*:\s*(?P<rest>.*)$'
+    management: [Ajoy Chawla, Ashok Sonthalia, Arun Narayan, Kuruvilla Markose, N S Raghavan,
+                 Raghavan N S, Manish Gupta, Saumen Bhaumik]
+    ignore_lines: ["^\\s*Titan Company Limited\\s*$", "^\\s*\\w+ \\d{1,2}, 20\\d\\d\\s*$"]
+  ASIANPAINT:
+    speakers:
+      - pattern: '^\s*(?P<name>(?:Mr\.|Ms\.|Mrs\.|Dr\.)?\s*[A-Z][\w.''’-]*(?:\s+[A-Z][\w.''’-]*){0,4})\s*:\s*(?P<rest>.*)$'
+    management: [Amit Syngle, R.J. Jeyamurugan, Parag Rane, Lakshya Sharma]
+    ignore_lines: []
+  MM:
+    speakers:
+      - pattern: '^\s*(?P<name>(?:Mr\.|Ms\.|Mrs\.|Dr\.)?\s*[A-Z][\w.''’-]*(?:\s+[A-Z][\w.''’-]*){0,4})\s*:\s*(?P<rest>.*)$'
+    # Q4 analyst meet: business CEOs answer too (introduced by Dr. Shah in the transcript)
+    management: [Anish Shah, Rajesh Jejurikar, Amarjyoti Barua, Divya Gulati, Veejay Nakra, Velusamy,
+                 Raul Rebello, Amit Sinha, Hemant Sikka, Vinod Sahay]
+    ignore_lines: ["^\\s*Mahindra & Mahindra Limited\\s*$", "^\\s*\\w+ \\d{1,2}, 20\\d\\d,?\\s*$", "^\\s*mahindraRise\\s*$"]
+  INFY:
+    speakers:
+      - pattern: '^\s*(?P<name>[A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,3})\s*$'
+        known_only: true      # a bare-name line counts only if the name is a known speaker
+    management: [Nandan Nilekani, Salil Parekh, Jayesh Sanghrajka, Rishi Basu, Sandeep Mahindroo]
+    ignore_lines: ["External Document ©", "^\\s*Infosys Limited\\s*$"]
+  RELIANCE:
+    speakers:
+      - {pattern: '^\s*(?:Sh|Smt|Shri)\.?\s+(?P<name>[A-Z][\w .]+?)\s+\d{2}:\d{2}:\d{2}', role: management}
+      - {pattern: '^\s*Company Speaker\s*\((?P<name>[^)]+)\)', role: management}
+      - {pattern: '^\s*Questioner\s*\((?P<name>[^,)]+)', role: analyst}
+    management: []
+    ignore_lines: ["© Reliance Industries Limited", "^\\s*Q&A Session"]
