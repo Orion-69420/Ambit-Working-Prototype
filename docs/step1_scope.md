@@ -32,9 +32,39 @@ Unchanged:
 - Comparators: Q3 FY26, Q4 FY25 and Q1 FY26
 - Basis: consolidated
 - FY: April–March
-- Metric list and EBITDA definition: as in procedure Section 2
+- Metric list and EBITDA definition: as in procedure Section 2 (confirmed 13 Oct). EBITDA = profit before exceptional items and tax + finance costs + depreciation and amortisation − other income
 
 Note on M&M: its consolidated figures include Mahindra Finance, which is an NBFC. NBFC metrics stay out of scope.
+
+## Operating KPIs (chosen 13 Oct)
+
+The KPIs were chosen from the downloaded Q4 FY26 and Q1 FY27 decks. For Infosys, the fact sheet stands in for the deck. Page numbers below are for Q1 FY27.
+
+| Company | KPI | Unit | Where | Comparators |
+|---|---|---|---|---|
+| Titan | Domestic jewellery business growth | % YoY | Jewellery quarterly performance slide (p18), text | Stated YoY only; prior-quarter value comes from the prior deck |
+| Titan | Same-store / secondary sales growth | % YoY | Same slide, text | Same. The label differs by quarter ("secondary sales" in Q4, "same-store retail growth (secondary)" in Q1); values are approximate ("c.") |
+| Asian Paints | Decorative India volume growth | % YoY | Volume growth slide (p14) | 10-quarter series on the slide |
+| Asian Paints | Standalone gross margin | % of net sales | Gross margin trend slide (p24) | 9-quarter series on the slide. Standalone, not consolidated |
+| M&M | SUV volumes | '000 units | Market leadership in SUV slide (p30) | 9-quarter series on the slide |
+| M&M | SUV revenue market share | % | Same slide | Same |
+| Infosys | Constant-currency revenue growth | % QoQ and YoY | Fact sheet p1 | Shown on the fact sheet |
+| Infosys | Utilisation, excluding trainees | % | Fact sheet p2 | Current, prior and year-ago columns |
+| Infosys | Voluntary attrition (LTM, IT services) | % | Fact sheet p2 | Same |
+| Reliance | Jio ARPU | ₹ per month | RJIL key operating metrics (p19) | Current, prior and year-ago columns |
+| Reliance | Jio customer base | Mn | Same table | Same |
+| Reliance | Jio per-capita data consumption | GB per month | Same table | Same |
+
+KPI notes:
+- **M&M Q4 FY26:** the Q4 deck is a full-year deck with annual figures only. Q4 FY26 KPI values are read from the 9-quarter series in the **Q1 FY27 deck** (`data/MM/Q1FY27/presentation.pdf`). The report must label this source as published 30 Jul 2026, after Q4 results day.
+- **Growth-rate KPIs** (Titan's two, Asian Paints volume growth, Infosys CC growth) are already rates of change. Step 3 should compare them in percentage points, not as % change of a %.
+- **Titan's figures come from text** with approximate values, so its Step 6 rules match sentences rather than table cells.
+- **Not chosen:**
+  - Titan store count and retail area (no year-ago figure in the deck)
+  - Infosys large-deal TCV
+  - Jio churn
+  - Reliance O2C (it doesn't disclose its own GRM)
+  - M&M tractors (only growth percentages)
 
 **Knock-on effects:** going from 6 to 10 reports means more manual verification in Step 11, and each company needs its own PDF rules (Step 6). The procedure and the timeline (Section 9) need updating to match.
 
