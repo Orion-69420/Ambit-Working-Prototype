@@ -154,6 +154,7 @@ output/       Excel and PDF reports (not in Git)
 
 | Document | Contents |
 |---|---|
+| [website.md](website.md) | What the review website does, and how to host and open it locally |
 | [docs/Pipeline_Documentation.docx](docs/Pipeline_Documentation.docx) ([PDF](docs/Pipeline_Documentation.pdf)) | The full pipeline documentation and access guide, in the format of the Phase 1 procedure |
 | [docs/metric_dictionary.md](docs/metric_dictionary.md) | Every metric, its source and how changes are graded |
 | [docs/procedure_crosscheck.md](docs/procedure_crosscheck.md) | Each procedure requirement checked against the build (44 pass, 8 noted departures, 0 fail) |
