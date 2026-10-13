@@ -12,6 +12,24 @@ CONFIG = pathlib.Path(__file__).resolve().parent.parent / "config"
 
 QUARTERS = ("Q4FY25", "Q1FY26", "Q3FY26", "Q4FY26", "Q1FY27")
 TARGET_QUARTERS = ("Q4FY26", "Q1FY27")
+QUARTER_DATES = {   # (start, end) of each three-month quarter, April-March financial year
+    "Q4FY25": ("2025-01-01", "2025-03-31"),
+    "Q1FY26": ("2025-04-01", "2025-06-30"),
+    "Q3FY26": ("2025-10-01", "2025-12-31"),
+    "Q4FY26": ("2026-01-01", "2026-03-31"),
+    "Q1FY27": ("2026-04-01", "2026-06-30"),
+}
+COMPARATORS = {     # target quarter -> comparator quarters (procedure Section 2)
+    "Q4FY26": {"prior": "Q3FY26", "year_ago": "Q4FY25"},
+    "Q1FY27": {"prior": "Q4FY26", "year_ago": "Q1FY26"},
+}
+
+
+def quarters_needed(quarter):
+    """A target quarter needs its own figures plus its comparators'; 'all' means every quarter."""
+    if quarter == "all":
+        return list(QUARTERS)
+    return [quarter, *COMPARATORS.get(quarter, {}).values()]
 
 METRIC_TYPES = {"reported", "derived", "input"}
 PERIODS = {"quarter", "point_in_time", "annual_only"}

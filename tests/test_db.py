@@ -58,6 +58,6 @@ def test_cli_init_db(tmp_path, capsys):
 
 
 def test_cli_pending_commands_validate_and_exit(tmp_path):
-    assert run.main(["run", "--company", "MM", "--quarter", "Q1FY27"]) == 2
+    assert run.main(["--db", str(tmp_path / "c.sqlite"), "export", "--company", "MM", "--quarter", "Q1FY27"]) == 2
     with pytest.raises(SystemExit):
         run.main(["ingest", "--company", "TRENT", "--quarter", "Q1FY27"])

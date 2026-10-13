@@ -30,10 +30,25 @@ def init_db(path=DEFAULT_DB):
     path = pathlib.Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     conn = connect(path)
+    _migrate(conn)
     conn.executescript(SCHEMA.read_text(encoding="utf8"))
     audit(conn, "init_db", str(path))
     conn.commit()
     return conn
+
+
+def _migrate(conn):
+    """Bring an older database up to the current schema.
+
+    Step 5 added figures.note and the 'extracted' status. SQLite cannot change a CHECK
+    constraint in place, so an empty figures table is dropped and recreated by the schema.
+    """
+    cols = {r["name"] for r in conn.execute("PRAGMA table_info(figures)")}
+    if cols and "note" not in cols:
+        if conn.execute("SELECT count(*) FROM figures").fetchone()[0]:
+            raise RuntimeError("figures table predates Step 5 and is not empty; rebuild the database")
+        conn.execute("DROP TABLE figures")
+        audit(conn, "schema_migrated", "figures", {"added": ["note", "status 'extracted'"]})
 
 
 def to_db(value):

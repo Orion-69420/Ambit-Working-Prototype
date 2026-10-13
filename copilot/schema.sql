@@ -42,7 +42,9 @@ CREATE TABLE IF NOT EXISTS figures (
     source_detail  TEXT,                            -- XBRL element, or PDF row label + column header
     method         TEXT NOT NULL CHECK (method IN ('xbrl', 'pdf', 'derived', 'manual')),
     derivation     TEXT,                            -- JSON: formula and input figure ids, for derived
-    status         TEXT NOT NULL CHECK (status IN ('verified', 'low_confidence', 'missing', 'manually_verified')),
+    -- extracted = not yet through the Step 8 checks
+    status         TEXT NOT NULL CHECK (status IN ('extracted', 'verified', 'low_confidence', 'missing', 'manually_verified')),
+    note           TEXT,                            -- why a figure is missing or low confidence
     supersedes     INTEGER REFERENCES figures(id),  -- analyst correction points at the original
     reason         TEXT,                            -- mandatory for corrections
     created_at     TEXT NOT NULL,

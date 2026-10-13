@@ -12,11 +12,11 @@ import argparse
 import pathlib
 import sys
 
-from copilot import config, db, ingest
+from copilot import config, db, ingest, xbrl_extract
 
 # Company/quarter subcommands and the procedure step that builds them
-STEPS = {"ingest": "Step 4", "run": "Steps 5-9", "export": "Step 10"}
-PENDING = {"run", "export"}
+STEPS = {"ingest": "Step 4", "run": "Steps 5-9 (Step 5 so far)", "export": "Step 10"}
+PENDING = {"export"}
 
 
 def parse(argv):
@@ -62,6 +62,26 @@ def main(argv=None):
     conn = db.connect(args.db)
     if args.command == "ingest":
         return report_ingest(ingest.run(conn, args.company, args.quarter))
+    if args.command == "run":
+        return report_run(xbrl_extract.run(conn, cfg, args.company, args.quarter))
+
+
+def report_run(results):
+    """One line per company-quarter with the headline XBRL figures."""
+    show = ["revenue", "ebitda", "ebitda_margin", "pat_owners", "basic_eps"]
+    print(f"{'company':<11}{'quarter':<8}" + "".join(f"{m:>15}" for m in show) + "  segments  missing")
+    failed = 0
+    for (c, q), figs in results.items():
+        if isinstance(figs, str):
+            print(f"{c:<11}{q:<8}  FAILED: {figs}", file=sys.stderr)
+            failed += 1
+            continue
+        top = {f["metric"]: f["value"] for f in figs if f["segment"] is None}
+        cells = "".join(f"{'-' if top.get(m) is None else f'{top[m]:,.2f}':>15}" for m in show)
+        segs = len({f["segment"] for f in figs if f["segment"]})
+        missing = sorted({f["metric"] for f in figs if f["status"] == "missing"})
+        print(f"{c:<11}{q:<8}{cells}  {segs:>8}  {', '.join(missing) or '-'}")
+    return 1 if failed else 0
 
 
 def report_ingest(s):

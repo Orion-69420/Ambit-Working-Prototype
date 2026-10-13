@@ -84,6 +84,16 @@ metrics:
     sources:
       xbrl: [ShareOfProfitLossOfAssociatesAndJointVenturesAccountedForUsingEquityMethod]
 
+  - id: total_income
+    name: Total income
+    definition: Revenue from operations + other income; Titan's segment revenues add up to this (Step 8 check)
+    type: input
+    unit: inr_crore
+    period: quarter
+    applies_to: [TITAN]
+    sources:
+      xbrl: [Income]
+
   - id: ebitda
     name: EBITDA
     definition: >-
@@ -153,9 +163,29 @@ metrics:
     per_segment: true
     applies_to: [TITAN, MM, INFY, RELIANCE]   # Asian Paints reports a single segment
     sources:
-      xbrl: [SegmentRevenueFromOperations]
+      xbrl: [SegmentRevenue]                   # per segment, before inter-segment eliminations
       xbrl_axis: ReportableSegmentsAxis
       pdf_labels: ["Segment Revenue"]          # cross-check
+
+  - id: inter_segment_revenue
+    name: Inter-segment revenue
+    definition: Eliminated on consolidation; sum of segment revenue - this = segment total (Step 8 check)
+    type: input
+    unit: inr_crore
+    period: quarter
+    applies_to: [TITAN, MM, INFY, RELIANCE]
+    sources:
+      xbrl: [InterSegmentRevenue]
+
+  - id: segment_revenue_total
+    name: Segment revenue total
+    definition: Total segment revenue after eliminations, as filed (Step 8 check)
+    type: input
+    unit: inr_crore
+    period: quarter
+    applies_to: [TITAN, MM, INFY, RELIANCE]
+    sources:
+      xbrl: [SegmentRevenueFromOperations]
 
   - id: segment_result
     name: Segment result (EBIT)

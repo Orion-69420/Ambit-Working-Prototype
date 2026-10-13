@@ -30,7 +30,7 @@ python scripts/collect_sources.py
 ```
 python run.py check-config                            # validate config/*.yaml
 python run.py ingest --company all --quarter all      # register documents, store page text
-python run.py run    --company MM --quarter Q1FY27    # Steps 5-9
+python run.py run    --company MM --quarter Q1FY27    # Steps 5-9 (XBRL extraction so far)
 python run.py export --company MM --quarter Q1FY27    # Step 10
 ```
 
