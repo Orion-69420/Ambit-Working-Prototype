@@ -1,8 +1,8 @@
 # Step 1: Lock scope and collect documents
 
-Status: **Done internally (13 Oct). Ambit sign-off pending.** Documents: 73 collected, and the 2 missing are covered by another source.
+Status: **Done (13 Oct).** Scope is locked. Documents: 73 collected, and the 2 missing are covered by another source.
 
-Done when: Ambit has approved the sample, and every required document is either in `data/` or listed as missing in `config/sources.yaml`.
+Done when: the sample is locked, and every required document is either in `data/` or listed as missing in `config/sources.yaml`. Ambit sign-off is not required for this prototype.
 
 ## Sample
 
@@ -69,11 +69,7 @@ Notes:
 - **Asian Paints Q4 FY26 XBRL:** the revised filing (15 Jul 2026) is `xbrl.xml`. The original (29 May 2026) is kept as `xbrl_original.xml`.
 - **Infosys results releases:** these are large bundles of 15–41 MB that include the auditors' reports.
 
-## Still needed from Ambit
+## Open items for the team (no Ambit sign-off needed)
 
-- [ ] Approve the 5 companies and 2 quarters
-- [ ] Approve the metric list and EBITDA definition
-- [ ] Approve the severity thresholds
-- [ ] Agree the layout of the sample analyst model
-- [ ] Confirm consolidated basis
-- [ ] Name the reviewing analyst(s)
+- [ ] Design the layout of the sample analyst model (Step 7)
+- [ ] Name who acts as the reviewing analyst on the review screen
