@@ -1,0 +1,48 @@
+# Transcript rules for Step 9 (keyword-based; the analyst judges meaning).
+# All matching is case-insensitive. Patterns are Python regular expressions.
+
+# Only sentences spoken by management count for guidance and explanations.
+management_markers: ["CEO", "CFO", "Managing Director", "Chief", "President", "Head", "Director"]
+non_management_markers: ["Moderator", "Analyst", "Participant"]
+
+guidance:
+  phrases: ["we expect", "we anticipate", "guidance", "target", "outlook", "we aim", "going forward", "we will", "should be in the range"]
+
+explanation:
+  phrases: ["due to", "driven by", "on account of", "because of", "led by", "impacted by", "owing to"]
+
+flags:
+  auditor:          ["qualified opinion", "qualification", "emphasis of matter", "auditor (has )?resign", "resignation of (the )?(statutory )?auditor"]
+  restatement:      ["restate", "restatement", "regroup(ed|ing) (of )?prior period"]
+  related_party:    ["related[- ]party transaction"]
+  regulatory:       ["show[- ]cause notice", "SEBI notice", "regulatory notice", "penalty", "tax demand", "enforcement directorate", "investigation"]
+  accounting_policy: ["change in accounting polic", "change in accounting estimate"]
+
+# A flag is skipped when one of these appears within the same sentence before the match.
+negations: ["no ", "not ", "nil ", "without ", "neither ", "none "]
+
+# Topics tie guidance and explanations to tracked metrics. common applies to every company.
+topics:
+  common:
+    revenue: ["revenue", "sales", "top ?line", "growth"]
+    margin: ["margin", "EBITDA", "profitability", "operating leverage"]
+    costs: ["raw material", "input cost", "commodity", "inflation", "deflation"]
+    capex: ["capex", "capital expenditure", "capacity"]
+    debt: ["debt", "borrowing", "leverage"]
+  TITAN:
+    jewellery: ["jewellery", "Tanishq", "gold price", "studded", "same[- ]store", "buyer"]
+    stores: ["store", "network", "expansion"]
+  ASIANPAINT:
+    volume: ["volume", "decorative", "demand"]
+    gross_margin: ["gross margin"]
+  MM:
+    suv: ["SUV", "utility vehicle", "market share", "EV", "electric"]
+    farm: ["tractor", "farm", "monsoon"]
+  INFY:
+    cc_growth: ["constant currency", "CC growth", "revenue guidance"]
+    deals: ["large deal", "TCV", "pipeline"]
+    people: ["utili[sz]ation", "attrition", "headcount", "hiring"]
+  RELIANCE:
+    o2c: ["O2C", "refining", "cracks", "petrochemical"]
+    jio: ["Jio", "ARPU", "subscriber", "5G", "tariff"]
+    retail: ["Reliance Retail", "store", "footfall"]

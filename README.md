@@ -3,6 +3,7 @@
 A local, rule-based prototype by IFSA IIT Kharagpur for Ambit. For each company and quarter it produces a fully sourced Change Report. No LLM or paid API is used.
 
 - Scope and decisions: [docs/step1_scope.md](docs/step1_scope.md)
+- Metric dictionary: [docs/step3_metrics.md](docs/step3_metrics.md) and `config/metrics.yaml`
 - Procedure: `Ambit_Phase1_Procedure.docx` (Phase 1 implementation procedure)
 
 ## Setup
@@ -27,6 +28,7 @@ python scripts/collect_sources.py
 ## Command line
 
 ```
+python run.py check-config                            # validate config/*.yaml
 python run.py ingest --company MM --quarter Q1FY27    # Step 4
 python run.py run    --company MM --quarter Q1FY27    # Steps 5-9
 python run.py export --company MM --quarter Q1FY27    # Step 10

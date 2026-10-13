@@ -1,0 +1,13 @@
+# Severity bands (Step 3). Severity grades the size of a move, not whether it is good or bad.
+# Applied to the absolute change, in the group's unit. Same bands for QoQ, YoY and vs estimate,
+# and for every sector (decided 13 Oct).
+#   low:    change < low_below
+#   medium: low_below <= change <= high_above
+#   high:   change > high_above
+
+groups:
+  revenue:        {unit: pct, low_below: 2,  high_above: 5,   applies: "Revenue, segment revenue"}
+  profit:         {unit: pct, low_below: 5,  high_above: 10,  applies: "EBITDA, segment result, PAT, EPS, net debt, cash flow"}
+  margins:        {unit: bps, low_below: 50, high_above: 150, applies: "Margins and other % levels (gross margin, utilisation, attrition, market share)"}
+  operating_kpis: {unit: pct, low_below: 5,  high_above: 10,  applies: "Volume and count KPIs (SUV volumes, Jio ARPU, customers, data)"}
+  rate_kpis:      {unit: pp,  low_below: 2,  high_above: 5,   applies: "Growth rates disclosed by the company (Titan growth, AP volume growth, Infosys CC growth)"}

@@ -1,5 +1,10 @@
 # Phase 1 company sample (Step 1). Locked 13 Oct.
-# Basis is consolidated by default; standalone only if Ambit asks.
+# Basis is consolidated for every metric unless metrics.yaml says otherwise.
+#
+# segments: canonical segment name -> labels used for it in XBRL DescriptionOfReportableSegment.
+#   Segment facts are tagged by position (ReportableSegments1Member, ...), and positions change
+#   between quarters, so segments are always matched by label. An unknown label stops the run.
+# segment_sum_to: what the segment revenues add up to, for the Step 8 reconciliation check.
 companies:
   - id: TITAN
     name: Titan Company Ltd   # replaces Trent (Trent holds no earnings calls -> no transcripts)
@@ -9,6 +14,13 @@ companies:
     tests: Segment reporting + operating KPIs
     financial_year: Apr-Mar
     basis: consolidated
+    segment_sum_to: total_income   # Titan's segment revenue includes other income
+    segments:
+      Jewellery: ["Jewellery", "Jewellery (refer note 4)"]
+      Watches: ["Watches", "Watches and Wearables"]   # renamed from Q1 FY26; same segment (verify values in Step 5)
+      Eyecare: ["Eyecare"]
+      Others: ["Others"]
+      Corporate (unallocated): ["Corporate (unallocated)", "Corporate"]
 
   - id: ASIANPAINT
     name: Asian Paints Ltd
@@ -18,6 +30,7 @@ companies:
     tests: Segment + operational metrics
     financial_year: Apr-Mar
     basis: consolidated
+    segments: {}   # single-segment company (XBRL: IsCompanyReportingMultisegmentOrSingleSegment)
 
   - id: MM
     name: Mahindra & Mahindra Ltd   # replaces Tata Motors (2025 demerger -> restated comparatives)
@@ -28,6 +41,12 @@ companies:
     note: Consolidated includes Mahindra Finance (NBFC); NBFC metrics stay out of scope
     financial_year: Apr-Mar
     basis: consolidated
+    segment_sum_to: revenue
+    segments:
+      Automotive: ["Automotive"]
+      Farm Equipment: ["Farm Equipment"]
+      Financial Services: ["Financial Services"]
+      Industrial Businesses and Consumer Services: ["Industrial Businesses and Consumer Services"]
 
   - id: INFY
     name: Infosys Ltd
@@ -38,6 +57,16 @@ companies:
     note: Common metric set (incl. derived EBITDA); IT metrics are its operating KPIs
     financial_year: Apr-Mar
     basis: consolidated
+    segment_sum_to: revenue
+    segments:
+      Financial Services: ["Financial Services"]
+      Retail: ["Retail"]
+      Communication: ["Communication"]
+      Energy, Utilities, Resources and Services: ["Energy, Utilities, Resources and Services"]
+      Manufacturing: ["Manufacturing"]
+      Hi-Tech: ["Hi-Tech"]
+      Life Sciences: ["Life Sciences"]
+      All other segments: ["All other segments"]
 
   - id: RELIANCE
     name: Reliance Industries Ltd
@@ -47,3 +76,10 @@ companies:
     tests: Multiple segments + very different disclosure structure
     financial_year: Apr-Mar
     basis: consolidated
+    segment_sum_to: revenue   # after inter-segment eliminations
+    segments:
+      O2C: ["Oil to Chemicals (O2C)"]
+      Oil and Gas: ["Oil and Gas"]
+      Retail: ["Retail"]
+      Digital Services: ["Digital Services"]
+      Others: ["Others"]

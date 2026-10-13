@@ -1,0 +1,412 @@
+# Metric dictionary, Phase 1 (Step 3).
+# XBRL element names are from the SEBI integrated-filing taxonomy (in-capmkt, 2026-01-31) as used in
+# the downloaded filings; PDF labels are as printed in the Q4 FY26 / Q1 FY27 documents.
+#
+# type:      reported | derived | input (input = used only to derive another metric, not shown)
+# period:    quarter | point_in_time | annual_only
+# change_as: pct (% change) | bps (basis points, for % levels) | pp (percentage points, for growth rates)
+# applies_to: all, or a list of company ids
+
+units:
+  inr_crore:      {label: "₹ crore", scale_from_xbrl: 10000000}   # XBRL values are in rupees
+  inr_per_share:  {label: "₹ per share", scale_from_xbrl: 1}
+  percent:        {label: "%"}            # a level, e.g. a margin or utilisation
+  pct_growth:     {label: "% YoY"}        # a growth rate disclosed by the company
+  thousand_units: {label: "'000 units"}
+  million:        {label: "Mn"}
+  inr_per_month:  {label: "₹ per month"}
+  gb_per_month:   {label: "GB per month"}
+
+metrics:
+
+  # ---------- Core financials (XBRL, consolidated) ----------
+
+  - id: revenue
+    name: Revenue from operations
+    definition: Revenue from operations as reported
+    type: reported
+    unit: inr_crore
+    period: quarter
+    change_as: pct
+    threshold_group: revenue
+    applies_to: all
+    sources:
+      xbrl: [RevenueFromOperations]
+      pdf_labels: ["Revenue from operations"]
+
+  - id: pbeit
+    name: Profit before exceptional items and tax
+    definition: Input to EBITDA; includes share of associates/JVs in all five companies' filings
+    type: input
+    unit: inr_crore
+    period: quarter
+    applies_to: all
+    sources:
+      xbrl: [ProfitBeforeExceptionalItemsAndTax]
+
+  - id: finance_costs
+    name: Finance costs
+    definition: Input to EBITDA
+    type: input
+    unit: inr_crore
+    period: quarter
+    applies_to: all
+    sources:
+      xbrl: [FinanceCosts]
+
+  - id: depreciation
+    name: Depreciation and amortisation
+    definition: Input to EBITDA
+    type: input
+    unit: inr_crore
+    period: quarter
+    applies_to: all
+    sources:
+      xbrl: [DepreciationDepletionAndAmortisationExpense]
+
+  - id: other_income
+    name: Other income
+    definition: Input to EBITDA
+    type: input
+    unit: inr_crore
+    period: quarter
+    applies_to: all
+    sources:
+      xbrl: [OtherIncome]
+
+  - id: associates_share
+    name: Share of profit/(loss) of associates and JVs
+    definition: Input to EBITDA; excluded from EBITDA (decided 13 Oct)
+    type: input
+    unit: inr_crore
+    period: quarter
+    applies_to: all
+    sources:
+      xbrl: [ShareOfProfitLossOfAssociatesAndJointVenturesAccountedForUsingEquityMethod]
+
+  - id: ebitda
+    name: EBITDA
+    definition: >-
+      Profit before exceptional items and tax + finance costs + depreciation and amortisation
+      - other income - share of profit of associates and JVs
+    type: derived
+    formula: pbeit + finance_costs + depreciation - other_income - associates_share
+    inputs: [pbeit, finance_costs, depreciation, other_income, associates_share]
+    unit: inr_crore
+    period: quarter
+    change_as: pct
+    threshold_group: profit
+    applies_to: all
+    sources:
+      pdf_labels: ["EBITDA"]   # cross-check only where the company prints its own EBITDA
+
+  - id: ebitda_margin
+    name: EBITDA margin
+    definition: EBITDA / Revenue from operations x 100
+    type: derived
+    formula: ebitda / revenue * 100
+    inputs: [ebitda, revenue]
+    unit: percent
+    period: quarter
+    change_as: bps
+    threshold_group: margins
+    applies_to: all
+    sources:
+      pdf_labels: ["EBITDA margin", "EBITDA %"]
+
+  - id: pat_owners
+    name: PAT attributable to owners
+    definition: Profit for the period attributable to owners of the parent
+    type: reported
+    unit: inr_crore
+    period: quarter
+    change_as: pct
+    threshold_group: profit
+    applies_to: all
+    sources:
+      xbrl: [ProfitOrLossAttributableToOwnersOfParent]
+      pdf_labels: ["Owners of the Company", "Owners of the Parent", "Equity holders of the Company"]
+
+  - id: basic_eps
+    name: Basic EPS
+    definition: Basic earnings per share, continuing and discontinued operations, not annualised
+    type: reported
+    unit: inr_per_share
+    period: quarter
+    change_as: pct
+    threshold_group: profit
+    applies_to: all
+    sources:
+      xbrl: [BasicEarningsLossPerShareFromContinuingAndDiscontinuedOperations]
+      pdf_labels: ["Basic"]
+
+  # ---------- Segments (XBRL, matched by segment name; see companies.yaml) ----------
+
+  - id: segment_revenue
+    name: Segment revenue
+    definition: Revenue from operations of each reportable segment
+    type: reported
+    unit: inr_crore
+    period: quarter
+    change_as: pct
+    threshold_group: revenue
+    per_segment: true
+    applies_to: [TITAN, MM, INFY, RELIANCE]   # Asian Paints reports a single segment
+    sources:
+      xbrl: [SegmentRevenueFromOperations]
+      xbrl_axis: ReportableSegmentsAxis
+      pdf_labels: ["Segment Revenue"]          # cross-check
+
+  - id: segment_result
+    name: Segment result (EBIT)
+    definition: Segment profit/(loss) before tax and finance costs
+    type: reported
+    unit: inr_crore
+    period: quarter
+    change_as: pct
+    threshold_group: profit
+    per_segment: true
+    applies_to: [TITAN, MM, INFY, RELIANCE]
+    sources:
+      xbrl: [SegmentProfitLossBeforeTaxAndFinanceCosts]
+      xbrl_axis: ReportableSegmentsFinanceCostsAxis
+      pdf_labels: ["Segment Results"]
+
+  # ---------- Balance sheet and cash flow ----------
+
+  - id: borrowings_current
+    name: Current borrowings
+    definition: Input to net debt
+    type: input
+    unit: inr_crore
+    period: point_in_time
+    applies_to: [TITAN, ASIANPAINT, INFY, RELIANCE]
+    sources:
+      xbrl: [BorrowingsCurrent]
+
+  - id: borrowings_noncurrent
+    name: Non-current borrowings
+    definition: Input to net debt
+    type: input
+    unit: inr_crore
+    period: point_in_time
+    applies_to: [TITAN, ASIANPAINT, INFY, RELIANCE]
+    sources:
+      xbrl: [BorrowingsNoncurrent]
+
+  - id: cash_equivalents
+    name: Cash and cash equivalents
+    definition: Input to net debt (balance sheet, not the cash flow statement)
+    type: input
+    unit: inr_crore
+    period: point_in_time
+    applies_to: [TITAN, ASIANPAINT, INFY, RELIANCE]
+    sources:
+      xbrl: [CashAndCashEquivalents]
+
+  - id: net_debt
+    name: Net debt
+    definition: >-
+      Current + non-current borrowings - cash and cash equivalents, as at quarter end.
+      Disclosed only at 31 March, so Phase 1 shows it for Q4 FY26 (vs Q4 FY25) only.
+      Not shown for M&M (consolidated borrowings include Mahindra Finance's lending book).
+    type: derived
+    formula: borrowings_current + borrowings_noncurrent - cash_equivalents
+    inputs: [borrowings_current, borrowings_noncurrent, cash_equivalents]
+    unit: inr_crore
+    period: point_in_time
+    change_as: pct
+    threshold_group: profit
+    applies_to: [TITAN, ASIANPAINT, INFY, RELIANCE]
+    sources: {}
+
+  - id: operating_cash_flow
+    name: Operating cash flow
+    definition: Net cash from operating activities
+    type: reported
+    unit: inr_crore
+    period: annual_only
+    change_as: pct
+    threshold_group: profit
+    applies_to: all
+    gap_reason: Filed only as a full-year figure in Q4; quarterly coverage is a Phase 2 item
+    sources:
+      xbrl: [CashFlowsFromUsedInOperatingActivities]
+
+  - id: capex
+    name: Capex
+    definition: Purchase of property, plant and equipment
+    type: reported
+    unit: inr_crore
+    period: annual_only
+    change_as: pct
+    threshold_group: profit
+    applies_to: all
+    gap_reason: Filed only as a full-year figure in Q4; quarterly coverage is a Phase 2 item
+    sources:
+      xbrl: [PurchaseOfPropertyPlantAndEquipmentClassifiedAsInvestingActivities]
+
+  # ---------- Operating KPIs (PDF; chosen 13 Oct, see docs/step1_scope.md) ----------
+
+  - id: titan_jewellery_growth
+    name: Domestic jewellery business growth
+    definition: YoY growth of the domestic jewellery business, as stated by the company
+    type: reported
+    unit: pct_growth
+    period: quarter
+    change_as: pp
+    threshold_group: rate_kpis
+    applies_to: [TITAN]
+    sources:
+      document: presentation
+      pdf_labels: ["Jewellery : Quarterly Business Performance"]
+      text_patterns: ["Business grew (?:c\\.)?(?P<value>\\d+(?:\\.\\d+)?)%"]
+
+  - id: titan_same_store_growth
+    name: Same-store / secondary sales growth (jewellery)
+    definition: YoY same-store (secondary) retail growth of the domestic jewellery business
+    type: reported
+    unit: pct_growth
+    period: quarter
+    change_as: pp
+    threshold_group: rate_kpis
+    applies_to: [TITAN]
+    sources:
+      document: presentation
+      pdf_labels: ["Jewellery : Quarterly Business Performance"]
+      text_patterns:
+        - "same\\s*-\\s*store retail growth \\(secondary\\) was (?:c\\.)?(?P<value>\\d+(?:\\.\\d+)?)%"
+        - "Secondary\\s+sales grew (?:c\\.)?(?P<value>\\d+(?:\\.\\d+)?)%"
+
+  - id: ap_deco_volume_growth
+    name: Decorative India volume growth
+    definition: YoY volume growth of the Decorative Business (India)
+    type: reported
+    unit: pct_growth
+    period: quarter
+    change_as: pp
+    threshold_group: rate_kpis
+    applies_to: [ASIANPAINT]
+    sources:
+      document: presentation
+      pdf_labels: ["Volume Growth", "Decorative Business (India)"]
+
+  - id: ap_gross_margin
+    name: Standalone gross margin
+    definition: Gross margin as % of net sales, standalone (as disclosed; not consolidated)
+    type: reported
+    unit: percent
+    period: quarter
+    basis: standalone
+    change_as: bps
+    threshold_group: margins
+    applies_to: [ASIANPAINT]
+    sources:
+      document: presentation
+      pdf_labels: ["Gross Margin Trend"]   # Q1 FY27 title adds "Standalone"; Q4 FY26 slide matches the standalone summary (45.6%)
+
+  - id: mm_suv_volumes
+    name: SUV volumes
+    definition: SUV volumes including ICE SUVs and E-SUVs
+    type: reported
+    unit: thousand_units
+    period: quarter
+    change_as: pct
+    threshold_group: operating_kpis
+    applies_to: [MM]
+    sources:
+      document: presentation
+      pdf_labels: ["MARKET LEADERSHIP IN SUV", "VOLUMES (‘000s)"]   # curly quote as printed
+      note: Q4 FY26 deck is annual-only; Q4 FY26 values come from the Q1 FY27 deck's quarterly series
+
+  - id: mm_suv_rms
+    name: SUV revenue market share
+    definition: Revenue market share in SUVs
+    type: reported
+    unit: percent
+    period: quarter
+    change_as: bps
+    threshold_group: margins
+    applies_to: [MM]
+    sources:
+      document: presentation
+      pdf_labels: ["MARKET LEADERSHIP IN SUV", "REVENUE MARKET SHARE"]
+      note: As for mm_suv_volumes
+
+  - id: infy_cc_growth
+    name: Constant-currency revenue growth (YoY)
+    definition: YoY revenue growth in constant currency
+    type: reported
+    unit: pct_growth
+    period: quarter
+    change_as: pp
+    threshold_group: rate_kpis
+    applies_to: [INFY]
+    sources:
+      document: results_release   # fact sheet inside the results bundle
+      pdf_labels: ["Revenue Growth", "CC", "YoY growth (%)"]
+
+  - id: infy_utilisation
+    name: Utilisation excluding trainees
+    definition: IT services utilisation, excluding trainees
+    type: reported
+    unit: percent
+    period: quarter
+    change_as: bps
+    threshold_group: margins
+    applies_to: [INFY]
+    sources:
+      document: results_release
+      pdf_labels: ["Effort & Utilization – Consolidated IT Services", "Excluding trainees"]
+
+  - id: infy_attrition
+    name: Voluntary attrition (LTM)
+    definition: Voluntary attrition, last twelve months, IT services
+    type: reported
+    unit: percent
+    period: quarter
+    change_as: bps
+    threshold_group: margins
+    applies_to: [INFY]
+    sources:
+      document: results_release
+      pdf_labels: ["Voluntary Attrition % (LTM - IT Services)"]
+
+  - id: ril_jio_arpu
+    name: Jio ARPU
+    definition: Average revenue per user per month, RJIL connectivity business
+    type: reported
+    unit: inr_per_month
+    period: quarter
+    change_as: pct
+    threshold_group: operating_kpis
+    applies_to: [RELIANCE]
+    sources:
+      document: presentation
+      pdf_labels: ["RJIL (Connectivity Business): Key Operating Metrics", "ARPU"]
+
+  - id: ril_jio_customers
+    name: Jio customer base
+    definition: Total customer base, RJIL
+    type: reported
+    unit: million
+    period: quarter
+    change_as: pct
+    threshold_group: operating_kpis
+    applies_to: [RELIANCE]
+    sources:
+      document: presentation
+      pdf_labels: ["RJIL (Connectivity Business): Key Operating Metrics", "Total Customer base"]
+
+  - id: ril_jio_data_per_capita
+    name: Jio per-capita data consumption
+    definition: Data consumption per customer per month, RJIL
+    type: reported
+    unit: gb_per_month
+    period: quarter
+    change_as: pct
+    threshold_group: operating_kpis
+    applies_to: [RELIANCE]
+    sources:
+      document: presentation
+      pdf_labels: ["RJIL (Connectivity Business): Key Operating Metrics", "Per Capita Data Consumption"]
