@@ -1,0 +1,49 @@
+# Phase 1 company sample (Step 1). DRAFT - not yet approved by Ambit.
+# Basis is consolidated by default; standalone only if Ambit asks.
+companies:
+  - id: TITAN
+    name: Titan Company Ltd   # replaces Trent (Trent holds no earnings calls -> no transcripts)
+    nse: TITAN
+    bse: "500114"
+    sector: Retail
+    tests: Segment reporting + operating KPIs
+    financial_year: Apr-Mar
+    basis: consolidated
+
+  - id: ASIANPAINT
+    name: Asian Paints Ltd
+    nse: ASIANPAINT
+    bse: "500820"
+    sector: Consumer / manufacturing
+    tests: Segment + operational metrics
+    financial_year: Apr-Mar
+    basis: consolidated
+
+  - id: MM
+    name: Mahindra & Mahindra Ltd   # replaces Tata Motors (2025 demerger -> restated comparatives)
+    nse: M&M
+    bse: "500520"
+    sector: Auto
+    tests: Multiple businesses/segments + complex financial reporting
+    note: Consolidated includes Mahindra Finance (NBFC); NBFC metrics stay out of scope
+    financial_year: Apr-Mar
+    basis: consolidated
+
+  - id: INFY
+    name: Infosys Ltd
+    nse: INFY
+    bse: "500209"
+    sector: IT services   # pulled forward from Phase 3 (decided 13 Oct)
+    tests: IT KPIs - constant-currency growth, utilisation, attrition, deal wins
+    note: Common metric set (incl. derived EBITDA); IT metrics are its operating KPIs
+    financial_year: Apr-Mar
+    basis: consolidated
+
+  - id: RELIANCE
+    name: Reliance Industries Ltd
+    nse: RELIANCE
+    bse: "500325"
+    sector: Conglomerate
+    tests: Multiple segments + very different disclosure structure
+    financial_year: Apr-Mar
+    basis: consolidated
