@@ -145,7 +145,7 @@ def run(conn, cfg, company="all", quarter="all", user=None):
                 "SELECT * FROM figures WHERE company = ? AND period = ? AND status != 'manually_verified'", (c, p))]
             results = {}
             for f in rows:
-                base_note = (f["note"] or "").split(MARK)[0].rstrip("; ") or None
+                base_note = extraction_note(f["note"])
                 f["note"] = base_note
                 if f["value"] is None and f["status"] == "missing" and f["method"] != "derived":
                     results[f["id"]] = ("missing", base_note, [])
@@ -199,6 +199,13 @@ def run(conn, cfg, company="all", quarter="all", user=None):
             summary[(c, p)] = counts
     conn.commit()
     return summary
+
+
+def extraction_note(note):
+    """The note as extraction left it: drops what earlier check runs added, so re-runs don't stack."""
+    keep = [part for part in (note or "").split(MARK)[0].split("; ")
+            if part.strip() and not part.startswith(("cross-checked in the ", "manually checked by "))]
+    return "; ".join(keep) or None
 
 
 def manual_check(conn, company, f):

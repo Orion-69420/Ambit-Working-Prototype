@@ -95,6 +95,18 @@ def test_cross_source_passes_on_a_later_release_and_notes_it(setup):
     assert status == "verified" and "Q1FY27 results release" in note
 
 
+def test_rerunning_checks_does_not_stack_notes(setup):
+    cfg, conn, doc, fig = setup
+    x = doc("RELIANCE", "Q4FY26", "xbrl", [])
+    doc("RELIANCE", "Q4FY26", "results_release", ["OCR text without the figure"])
+    doc("RELIANCE", "Q1FY27", "results_release", ["Revenue from Operations 311,850 298,621 248,660"])
+    fid = fig("RELIANCE", "Q4FY26", "revenue", 298621, doc_id=x)
+    for _ in range(3):
+        verify.run(conn, cfg, "RELIANCE", "Q4FY26")
+    note = conn.execute("SELECT note FROM figures WHERE id = ?", (fid,)).fetchone()[0]
+    assert note == "cross-checked in the Q1FY27 results release, p1"
+
+
 def test_cross_source_accepts_press_release(setup):
     cfg, conn, doc, fig = setup
     x = doc("RELIANCE", "Q1FY27", "xbrl", [])

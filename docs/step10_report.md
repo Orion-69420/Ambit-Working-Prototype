@@ -1,6 +1,14 @@
 # Step 10: Change Report, review screen and exports
 
-Status: **Built and tested (13 Oct). Waiting for the first real approval**, which you do on the review screen (decided 13 Oct).
+Status: **Done (13 Oct).** All 10 reports are approved and exported as APPROVED Excel and PDF.
+
+**How they were approved:** on the user's instruction ("just approve everything"), as a bulk approval. The reviewer recorded on every item is "Bulk approval on user instruction (Claude Code)". Each item's comment says it was approved on that instruction and **not individually reviewed**. The analyst's item-by-item review is still to be done in Step 11.
+
+**The 6 low-confidence figures were actually checked against their sources first:**
+- **Titan revenue, 5 quarters:** sale of products + other operating revenue equals the XBRL figure in each release (for example Q1 FY27 p9: 20,787 + 569 = 21,356). Q4 FY25 was read from the Q1 FY26 release.
+- **Reliance Q1 FY27 PAT attributable to owners:** 20,946, read on the scanned results page (p9).
+
+Their notes record exactly what was checked.
 
 ```
 python run.py export --company all --quarter all      # Excel + PDF for every report (DRAFT until approved)
@@ -9,7 +17,7 @@ streamlit run app.py                                  # review screen
 
 Done when: one company-quarter goes from documents to an approved Excel and PDF report, end to end.
 - **Shown on a copy of the database** by `tests/test_report_flow.py`: review every item → approve → export APPROVED Excel and PDF that match → a correction returns the report to Draft.
-- **On the real database**, all 10 reports are exported as **DRAFT**, and none is approved yet.
+- **On the real database:** all 10 reports are approved, and they stay approved after a full pipeline re-run.
 
 ## The Change Report (`copilot/report.py`)
 
@@ -55,7 +63,7 @@ One report per company and quarter, built fresh from the database each time it i
 - **PDF:** landscape A4, with the status and SAMPLE banner on every page. The standard PDF fonts have no ₹ sign, so the PDF writes "Rs".
 - **Files:** `output/<COMPANY>_<QUARTER>_<DRAFT|APPROVED>.xlsx/.pdf`. They are not kept in Git.
 
-## Current state
+## State before approval
 
 | Report | Items to review | Blockers besides review |
 |---|---|---|
@@ -64,6 +72,10 @@ One report per company and quarter, built fresh from the database each time it i
 | M&M | 19 / 19 | — |
 | Infosys | 47 / 35 | — (many guidance candidates) |
 | Reliance | 23 / 23 | Q1 FY27: low-confidence PAT |
+
+## Fix made during approval
+
+Running the checks again without re-extracting added the "cross-checked in…" note a second time. That changed one approved report's fingerprint and sent Reliance Q1 FY27 back to Draft after a re-run. The checks now rebuild their notes from scratch (`verify.extraction_note`), and the report was re-approved. The flow tests now reset their database copy to "nothing reviewed" first.
 
 ## Limits (Phase 1)
 

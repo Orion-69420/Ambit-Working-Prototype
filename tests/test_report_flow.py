@@ -19,7 +19,15 @@ WHO = "Test reviewer"
 def env(tmp_path):
     path = tmp_path / "copy.sqlite"
     shutil.copy(REAL, path)
-    return config.load_all(), db.connect(path), tmp_path
+    cfg, conn = config.load_all(), db.connect(path)
+    # start from "nothing reviewed", whatever the real database holds
+    conn.execute("DELETE FROM reviews")
+    conn.execute("DELETE FROM reports")
+    conn.execute("DELETE FROM figures WHERE supersedes IS NOT NULL")
+    conn.execute("UPDATE figures SET status = 'extracted' WHERE status = 'manually_verified'")
+    conn.commit()
+    verify.run(conn, cfg)
+    return cfg, conn, tmp_path
 
 
 def review_all(conn, cfg, company, quarter, comment="checked against source"):
