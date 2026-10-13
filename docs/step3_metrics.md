@@ -26,7 +26,7 @@ Done when: every metric has a definition, unit, period type, source mapping and 
 | Segment result (EBIT) | XBRL `SegmentProfitLossBeforeTaxAndFinanceCosts`, by segment | Reported | % | profit | Titan, M&M, Infosys, Reliance |
 | Net debt | Borrowings − cash (XBRL, 31 March only) | Derived | % | profit | All except M&M; Q4 FY26 only |
 | Operating cash flow, capex | XBRL, full-year only | Reported | — | — | Always listed in Gaps for Phase 1 |
-| Titan: jewellery growth, same-store growth | Presentation text | Reported | pp | rate_kpis | Titan |
+| Titan: secondary growth (overall), like-to-like growth (changed in Step 6) | Presentation table | Reported | pp | rate_kpis | Titan |
 | Asian Paints: decorative India volume growth | Presentation | Reported | pp | rate_kpis | Asian Paints |
 | Asian Paints: gross margin (standalone) | Presentation | Reported | bps | margins | Asian Paints |
 | M&M: SUV volumes | Presentation | Reported | % | operating_kpis | M&M |

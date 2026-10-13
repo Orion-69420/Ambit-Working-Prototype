@@ -1,0 +1,18 @@
+# M&M: "Market leadership in SUV" slide, two quarterly charts side by side.
+# The Q4 FY26 deck is annual-only, so it is skipped; Q4 FY26 and its comparators come from the
+# Q1 FY27 deck's 9-quarter series (decided 13 Oct).
+kpis:
+  mm_suv_volumes:
+    kind: chart
+    page_anchors: ["MARKET LEADERSHIP IN SUV", "VOLUMES", "REVENUE MARKET SHARE"]
+    region: [0.0, 0.5]
+    series: "SUV volumes ('000s)"
+    value_pattern: '^\d+(\.\d+)?$'
+    skip: {Q4FY26: "Q4 deck shows annual figures only"}
+  mm_suv_rms:
+    kind: chart
+    page_anchors: ["MARKET LEADERSHIP IN SUV", "VOLUMES", "REVENUE MARKET SHARE"]
+    region: [0.5, 1.0]
+    series: "SUV revenue market share"
+    value_pattern: '^\d+(\.\d+)?%$'
+    skip: {Q4FY26: "Q4 deck shows annual figures only"}

@@ -1,7 +1,14 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git commit -q -m 'Step 5: extract core financials and segments from XBRL *)"
+      "Bash(git commit -q -m 'Step 5: extract core financials and segments from XBRL *)",
+      "Bash(.venv/Scripts/python -I -c ' *)",
+      "Bash(.venv/Scripts/python run.py ingest --company TITAN --quarter all)",
+      "Bash(.venv/Scripts/python run.py run --company TITAN --quarter Q1FY27)",
+      "Bash(.venv/Scripts/python -m pytest -q tests/test_pdf_extract.py -k scanned)",
+      "Bash(sed -i 's/python run.py run    --company MM --quarter Q1FY27    # Steps 5-9 \\(XBRL extraction so far\\)/python run.py run    --company MM --quarter Q1FY27    # Steps 5-9 \\(XBRL + PDF KPIs so far\\)/' README.md)",
+      "Bash(sed -i 's/- Metric dictionary: \\\\[docs\\\\/step3_metrics.md\\\\]\\(docs\\\\/step3_metrics.md\\) and `config\\\\/metrics.yaml`/- Metric dictionary: [docs\\\\/step3_metrics.md]\\(docs\\\\/step3_metrics.md\\) and `config\\\\/metrics.yaml`\\\\n- Step records: [docs\\\\/]\\(docs\\\\/\\) \\(step4_ingest, step5_xbrl, step6_kpis\\)/' README.md)",
+      "Bash(git commit -q -m 'Step 6: extract operating KPIs from PDFs with per-company rules *)"
     ]
   }
 }

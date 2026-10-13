@@ -1,0 +1,21 @@
+# Reliance: "RJIL (Connectivity Business): Key Operating Metrics" table with columns for the
+# year-ago, prior and current quarters.
+kpis:
+  ril_jio_arpu:
+    kind: grid
+    page_anchors: ["Key Operating Metrics", "ARPU"]
+    row: ["ARPU"]
+    columns: quarter
+    value_pattern: '^\d+(\.\d+)?$'
+  ril_jio_customers:
+    kind: grid
+    page_anchors: ["Key Operating Metrics", "Total Customer base"]
+    row: ["Total Customer base"]
+    columns: quarter
+    value_pattern: '^\d+(\.\d+)?$'
+  ril_jio_data_per_capita:
+    kind: grid
+    page_anchors: ["Key Operating Metrics", "Per Capita Data"]
+    row: ["Per Capita Data"]
+    columns: quarter
+    value_pattern: '^\d+(\.\d+)?$'

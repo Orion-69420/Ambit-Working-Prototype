@@ -1,0 +1,15 @@
+# Titan: "Secondary YoY Growth" table on the jewellery slide. Each deck states only its own quarter.
+# The Tanishq/Mia/Zoya block comes first on the page; CaratLane's block (same captions) follows.
+kpis:
+  titan_secondary_growth:
+    kind: labelled
+    page_anchors: ["Secondary", "Growth", "Overall", "Like to like", "Jewellery"]
+    label: "Overall"
+    occurrence: 1
+    value_pattern: '^\d+(\.\d+)?%$'
+  titan_ltl_growth:
+    kind: labelled
+    page_anchors: ["Secondary", "Growth", "Overall", "Like to like", "Jewellery"]
+    label: "Like to like"
+    occurrence: 1
+    value_pattern: '^\d+(\.\d+)?%$'

@@ -1,0 +1,12 @@
+# Asian Paints: quarterly series charts; each deck shows 9-10 quarters, covering every comparator.
+kpis:
+  ap_deco_volume_growth:
+    kind: chart
+    page_anchors: ["Volume Growth Momentum", "Decorative Business (India)"]
+    series: "Decorative Business (India) volume growth"
+    value_pattern: '^-?\d+(\.\d+)?%$'
+  ap_gross_margin:
+    kind: chart
+    page_anchors: ["Gross Margin Trend", "Gross Margin is computed as a % of Net sales"]
+    series: "Standalone gross margin"
+    value_pattern: '^\d{2}(\.\d+)?%$'      # excludes annotations such as "~1.8%"

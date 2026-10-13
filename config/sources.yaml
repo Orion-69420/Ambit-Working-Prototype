@@ -1,7 +1,7 @@
 # Document register for Phase 1 (Step 1).
 # status: pending | collected | missing  (missing = confirmed unavailable, with a reason)
-# Comparator presentations are not listed: KPI comparators are read from the target-quarter
-# presentation; add one here only if a comparator is not shown there.
+# Comparator presentations are listed only where a KPI comparator is not shown in the
+# target-quarter deck (Titan, added in Step 6).
 documents:
 - company: TITAN
   quarter: Q4FY26
@@ -908,3 +908,39 @@ documents:
   status: collected
   url: https://nsearchives.nseindia.com/corporate/kavinavora_18072025193102_SE_FR.pdf
   sha256: 589a0d9edae6a5ed72524d6a8391bbe48780123b61167c5789a4444cd86869a8
+- company: TITAN
+  quarter: Q3FY26
+  period:
+    start: '2025-10-01'
+    end: '2025-12-31'
+  role: comparator
+  type: presentation
+  path: data/TITAN/Q3FY26/presentation.pdf
+  publication_date: '2026-02-10'
+  status: collected
+  url: https://nsearchives.nseindia.com/corporate/TITAN_10022026174016_SEinvestorpresentationQ32025-26.pdf
+  sha256: f694f331c2f2c5f37f1dd6cd48c951af4eedcd9779eb767150f3ad3934cb33c9
+- company: TITAN
+  quarter: Q4FY25
+  period:
+    start: '2025-01-01'
+    end: '2025-03-31'
+  role: comparator
+  type: presentation
+  path: data/TITAN/Q4FY25/presentation.pdf
+  publication_date: '2025-05-08'
+  status: collected
+  url: https://nsearchives.nseindia.com/corporate/TITAN_08052025182623_SEinvestorpresentationQ4.pdf
+  sha256: c6d7be90271e2dd24a28ba0a10855b46f33f0909b5e42f4df82a8df883f90399
+- company: TITAN
+  quarter: Q1FY26
+  period:
+    start: '2025-04-01'
+    end: '2025-06-30'
+  role: comparator
+  type: presentation
+  path: data/TITAN/Q1FY26/presentation.pdf
+  publication_date: '2025-08-07'
+  status: collected
+  url: https://nsearchives.nseindia.com/corporate/TITAN_07082025172844_SEinvestorpresentationQ1.pdf
+  sha256: c0356b6beb1d940d402cb38d9125799e9385c3b9c0f4b7831521cff18b583a6f

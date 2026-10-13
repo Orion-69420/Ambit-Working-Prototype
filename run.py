@@ -12,10 +12,10 @@ import argparse
 import pathlib
 import sys
 
-from copilot import config, db, ingest, xbrl_extract
+from copilot import config, db, ingest, pdf_extract, xbrl_extract
 
 # Company/quarter subcommands and the procedure step that builds them
-STEPS = {"ingest": "Step 4", "run": "Steps 5-9 (Step 5 so far)", "export": "Step 10"}
+STEPS = {"ingest": "Step 4", "run": "Steps 5-9 (Steps 5-6 so far)", "export": "Step 10"}
 PENDING = {"export"}
 
 
@@ -63,7 +63,21 @@ def main(argv=None):
     if args.command == "ingest":
         return report_ingest(ingest.run(conn, args.company, args.quarter))
     if args.command == "run":
-        return report_run(xbrl_extract.run(conn, cfg, args.company, args.quarter))
+        code = report_run(xbrl_extract.run(conn, cfg, args.company, args.quarter))
+        return max(code, report_kpis(pdf_extract.run(conn, cfg, args.company, args.quarter)))
+
+
+def report_kpis(results):
+    """One line per KPI and document: the quarters it yielded, or why it is missing."""
+    print()
+    print(f"{'company':<11}{'document':<10}{'kpi':<26}page  values by quarter")
+    for (c, q, m), figs in results.items():
+        if isinstance(figs, str):
+            print(f"{c:<11}{q:<10}{m:<26}   -  MISSING: {figs}")
+            continue
+        vals = ", ".join(f"{f['period']} {f['value']}" + ("~" if f["note"] else "") for f in figs)
+        print(f"{c:<11}{q:<10}{m:<26}{figs[0]['source_ref']:>4}  {vals}")
+    return 0
 
 
 def report_run(results):

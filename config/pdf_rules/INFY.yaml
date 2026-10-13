@@ -1,0 +1,20 @@
+# Infosys: fact sheet inside the results bundle. Utilisation and attrition tables show the
+# current, prior and year-ago quarters; CC growth is stated for the fact sheet's own quarter only.
+kpis:
+  infy_cc_growth:
+    kind: text
+    page_anchors: ["Fact Sheet", "CC Growth"]
+    # "2.4% YoY CC Growth" (Q1-Q3) or "4.1% Q4 YoY CC Growth#" (Q4 sheets also show the full year)
+    pattern: '(?P<value>\d+(?:\.\d+)?)%\s*(?:Q4\s*)?YoY\s*CC Growth'
+  infy_utilisation:
+    kind: grid
+    page_anchors: ["Effort & Utilization", "Excluding trainees"]
+    row: ["Utilization", "Excluding trainees"]
+    columns: date
+    value_pattern: '^\d+(\.\d+)?$'
+  infy_attrition:
+    kind: grid
+    page_anchors: ["Voluntary Attrition"]
+    row: ["Voluntary Attrition % (LTM - IT Services)"]
+    columns: date
+    value_pattern: '^\d+(\.\d+)?%$'

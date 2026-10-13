@@ -42,8 +42,8 @@ The KPIs were chosen from the downloaded Q4 FY26 and Q1 FY27 decks. For Infosys,
 
 | Company | KPI | Unit | Where | Comparators |
 |---|---|---|---|---|
-| Titan | Domestic jewellery business growth | % YoY | Jewellery quarterly performance slide (p18), text | Stated YoY only; prior-quarter value comes from the prior deck |
-| Titan | Same-store / secondary sales growth | % YoY | Same slide, text | Same. The label differs by quarter ("secondary sales" in Q4, "same-store retail growth (secondary)" in Q1); values are approximate ("c.") |
+| Titan | Jewellery secondary sales growth, overall *(changed in Step 6)* | % YoY | "Secondary YoY Growth" table (p21) | Each deck states its own quarter only; comparators come from the comparator quarters' decks |
+| Titan | Jewellery like-to-like secondary growth *(changed in Step 6)* | % YoY | Same table | Same. Replaces the prose figures, which mixed overall and like-to-like growth |
 | Asian Paints | Decorative India volume growth | % YoY | Volume growth slide (p14) | 10-quarter series on the slide |
 | Asian Paints | Standalone gross margin | % of net sales | Gross margin trend slide (p24) | 9-quarter series on the slide. Standalone, not consolidated |
 | M&M | SUV volumes | '000 units | Market leadership in SUV slide (p30) | 9-quarter series on the slide |
@@ -58,7 +58,7 @@ The KPIs were chosen from the downloaded Q4 FY26 and Q1 FY27 decks. For Infosys,
 KPI notes:
 - **M&M Q4 FY26:** the Q4 deck is a full-year deck with annual figures only. Q4 FY26 KPI values are read from the 9-quarter series in the **Q1 FY27 deck** (`data/MM/Q1FY27/presentation.pdf`). The report must label this source as published 30 Jul 2026, after Q4 results day.
 - **Growth-rate KPIs** (Titan's two, Asian Paints volume growth, Infosys CC growth) are already rates of change. Step 3 should compare them in percentage points, not as % change of a %.
-- **Titan's figures come from text** with approximate values, so its Step 6 rules match sentences rather than table cells.
+- **Titan** (revised in Step 6): both KPIs come from the deck's "Secondary YoY Growth" table, with exact values.
 - **Not chosen:**
   - Titan store count and retail area (no year-ago figure in the deck)
   - Infosys large-deal TCV

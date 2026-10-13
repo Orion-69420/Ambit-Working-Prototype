@@ -278,9 +278,11 @@ metrics:
 
   # ---------- Operating KPIs (PDF; chosen 13 Oct, see docs/step1_scope.md) ----------
 
-  - id: titan_jewellery_growth
-    name: Domestic jewellery business growth
-    definition: YoY growth of the domestic jewellery business, as stated by the company
+  # Titan KPIs changed in Step 6 (13 Oct): the prose figures mixed overall and like-to-like growth,
+  # so both now come from the deck's "Secondary YoY Growth" table (Tanishq, Mia, Zoya, domestic).
+  - id: titan_secondary_growth
+    name: Jewellery secondary sales growth (overall)
+    definition: YoY secondary (retail) sales growth, Tanishq, Mia and Zoya, domestic
     type: reported
     unit: pct_growth
     period: quarter
@@ -289,12 +291,11 @@ metrics:
     applies_to: [TITAN]
     sources:
       document: presentation
-      pdf_labels: ["Jewellery : Quarterly Business Performance"]
-      text_patterns: ["Business grew (?:c\\.)?(?P<value>\\d+(?:\\.\\d+)?)%"]
+      pdf_labels: ["Secondary", "Overall"]
 
-  - id: titan_same_store_growth
-    name: Same-store / secondary sales growth (jewellery)
-    definition: YoY same-store (secondary) retail growth of the domestic jewellery business
+  - id: titan_ltl_growth
+    name: Jewellery like-to-like secondary growth
+    definition: YoY like-to-like (same-store) secondary sales growth, Tanishq, Mia and Zoya, domestic
     type: reported
     unit: pct_growth
     period: quarter
@@ -303,10 +304,7 @@ metrics:
     applies_to: [TITAN]
     sources:
       document: presentation
-      pdf_labels: ["Jewellery : Quarterly Business Performance"]
-      text_patterns:
-        - "same\\s*-\\s*store retail growth \\(secondary\\) was (?:c\\.)?(?P<value>\\d+(?:\\.\\d+)?)%"
-        - "Secondary\\s+sales grew (?:c\\.)?(?P<value>\\d+(?:\\.\\d+)?)%"
+      pdf_labels: ["Secondary", "Like to like"]
 
   - id: ap_deco_volume_growth
     name: Decorative India volume growth
