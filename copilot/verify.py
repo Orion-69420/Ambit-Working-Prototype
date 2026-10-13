@@ -169,6 +169,13 @@ def run(conn, cfg, company="all", quarter="all", user=None):
                 for f in rows:
                     if f["metric"] == "segment_revenue" and f["id"] in results and results[f["id"]][0] == "verified":
                         results[f["id"]] = ("low_confidence", results[f["id"]][1], [f"segment sum: {reason}"])
+            # an analyst's check against the source (Step 10) holds while the value is unchanged
+            for f in rows:
+                if f["id"] in results and results[f["id"]][0] == "low_confidence" and f["method"] != "derived":
+                    chk = manual_check(conn, c, f)
+                    if chk:
+                        results[f["id"]] = ("manually_verified",
+                                            f"manually checked by {chk['reviewer']}: {chk['comment']}", [])
             # derived figures inherit their inputs' status
             for f in rows:
                 if f["method"] != "derived":
@@ -178,7 +185,7 @@ def run(conn, cfg, company="all", quarter="all", user=None):
                     continue
                 ids = json.loads(f["derivation"] or "{}").get("input_figures", {})
                 weak = [name for name, fid in ids.items()
-                        if fid is None or results.get(fid, ("verified",))[0] != "verified"]
+                        if fid is None or results.get(fid, ("verified",))[0] not in ("verified", "manually_verified")]
                 results[f["id"]] = ("low_confidence" if weak else "verified", f["note"],
                                     [f"input not verified: {', '.join(weak)}"] if weak else [])
             counts = {}
@@ -192,6 +199,14 @@ def run(conn, cfg, company="all", quarter="all", user=None):
             summary[(c, p)] = counts
     conn.commit()
     return summary
+
+
+def manual_check(conn, company, f):
+    """The latest analyst approval of this exact figure value, if any (see report.check_key)."""
+    key = f"check:{company}:{f['metric']}:{f['segment'] or ''}:{f['period']}:{f['value']}"
+    row = conn.execute("SELECT reviewer, comment FROM reviews WHERE item = ? AND action = 'approve'"
+                       " ORDER BY id DESC LIMIT 1", (key,)).fetchone()
+    return dict(row) if row else None
 
 
 def _join(a, b):

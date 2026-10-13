@@ -11,7 +11,7 @@ DEFAULT_DB = ROOT / "data" / "copilot.sqlite"
 SCHEMA = pathlib.Path(__file__).with_name("schema.sql")
 
 TABLES = ("documents", "pages", "figures", "estimates", "comparisons",
-          "statements", "reviews", "audit_log")
+          "statements", "reviews", "audit_log", "reports")
 
 
 def now():

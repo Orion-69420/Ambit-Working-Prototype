@@ -12,11 +12,11 @@ import argparse
 import pathlib
 import sys
 
-from copilot import commentary, compare, config, db, estimates, ingest, pdf_extract, verify, xbrl_extract
+from copilot import commentary, compare, config, db, estimates, export, ingest, pdf_extract, report, verify, xbrl_extract
 
 # Company/quarter subcommands and the procedure step that builds them
 STEPS = {"ingest": "Step 4", "run": "Steps 5-9", "export": "Step 10"}
-PENDING = {"export"}
+PENDING = set()
 
 
 def parse(argv):
@@ -62,6 +62,8 @@ def main(argv=None):
     conn = db.connect(args.db)
     if args.command == "ingest":
         return report_ingest(ingest.run(conn, args.company, args.quarter))
+    if args.command == "export":
+        return run_export(conn, cfg, args)
     if args.command == "run":
         code = report_run(xbrl_extract.run(conn, cfg, args.company, args.quarter))
         code = max(code, report_kpis(pdf_extract.run(conn, cfg, args.company, args.quarter)))
@@ -69,6 +71,22 @@ def main(argv=None):
         code = max(code, report_checks(conn, verify.run(conn, cfg, args.company, args.quarter),
                                        compare.run(conn, cfg, args.company, args.quarter)))
         return max(code, report_commentary(conn, commentary.run(conn, cfg, args.company, args.quarter), args))
+
+
+def run_export(conn, cfg, args):
+    companies = list(cfg.companies) if args.company == "all" else [args.company]
+    quarters = config.TARGET_QUARTERS if args.quarter == "all" else [args.quarter]
+    bad = [q for q in quarters if q not in config.TARGET_QUARTERS]
+    if bad:
+        print(f"reports exist only for {', '.join(config.TARGET_QUARTERS)}", file=sys.stderr)
+        return 1
+    for c in companies:
+        for q in quarters:
+            snap, files = export.export(conn, cfg, c, q)
+            rep = report.build(conn, cfg, c, q)
+            why = "" if snap["status"] == "approved" else f"  ({'; '.join(report.blockers(conn, rep)) or 'ready to approve'})"
+            print(f"{c:<11}{q:<8}{snap['status'].upper():<9}{files[0].name}, {files[1].name}{why}")
+    return 0
 
 
 def report_commentary(conn, results, args):

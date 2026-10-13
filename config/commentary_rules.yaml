@@ -88,3 +88,50 @@ transcripts:
       - {pattern: '^\s*Questioner\s*\((?P<name>[^,)]+)', role: analyst}
     management: []
     ignore_lines: ["© Reliance Industries Limited", "^\\s*Q&A Session"]
+
+# Which topic's explanations are shown beside each metric in the Change Report (Step 10).
+metric_topics:
+  revenue: revenue
+  segment_revenue: revenue
+  ebitda: margin
+  ebitda_margin: margin
+  segment_result: margin
+  net_debt: debt
+  titan_secondary_growth: jewellery
+  titan_ltl_growth: jewellery
+  ap_deco_volume_growth: volume
+  ap_gross_margin: gross_margin
+  mm_suv_volumes: suv
+  mm_suv_rms: suv
+  infy_cc_growth: cc_growth
+  infy_utilisation: people
+  infy_attrition: people
+  ril_jio_arpu: jio
+  ril_jio_customers: jio
+  ril_jio_data_per_capita: jio
+
+# Words that tie an explanation to a segment row; a segment row shows an explanation only if
+# the quote names its segment (otherwise the generic company-level quote would repeat on every row).
+segment_keywords:
+  TITAN:
+    Jewellery: ["jewell", "Tanishq", "CaratLane", "Mia\b", "Zoya"]
+    Watches: ["watch"]
+    Eyecare: ["eye ?care", "eyewear", "Titan Eye"]
+  MM:
+    Automotive: ["\bauto\b", "automotive", "\bSUV", "\bLCV", "\bEV\b"]
+    Farm Equipment: ["\bfarm\b", "tractor"]
+    Financial Services: ["Mahindra Finance", "financial services", "\bNBFC\b"]
+    Industrial Businesses and Consumer Services: ["Lifespaces", "logistics", "Club Mahindra", "holiday", "industrial"]
+  INFY:
+    Financial Services: ["financial services", "\bBFSI\b", "banking"]
+    Retail: ["\bretail"]
+    Communication: ["communication", "telecom"]
+    Energy, Utilities, Resources and Services: ["energy", "utilit"]
+    Manufacturing: ["manufacturing"]
+    Hi-Tech: ["hi-tech", "high tech"]
+    Life Sciences: ["life sciences", "healthcare"]
+  RELIANCE:
+    O2C: ["\bO2C\b", "refin", "petrochem"]
+    Oil and Gas: ["oil and gas", "KG ?D6", "gas production", "\bCBM\b"]
+    Retail: ["\bretail"]
+    Digital Services: ["\bJio\b", "digital"]

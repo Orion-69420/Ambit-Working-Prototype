@@ -4,7 +4,7 @@ A local, rule-based prototype by IFSA IIT Kharagpur for Ambit. For each company 
 
 - Scope and decisions: [docs/step1_scope.md](docs/step1_scope.md)
 - Metric dictionary: [docs/step3_metrics.md](docs/step3_metrics.md) and `config/metrics.yaml`
-- Step records: [docs/](docs/) (step4_ingest, step5_xbrl, step6_kpis, step7_estimates, step8_verify_compare, review_after_step8, step9_commentary)
+- Step records: [docs/](docs/) (step4_ingest, step5_xbrl, step6_kpis, step7_estimates, step8_verify_compare, review_after_step8, step9_commentary, step10_report)
 - Procedure: `Ambit_Phase1_Procedure.docx` (Phase 1 implementation procedure)
 
 ## Setup
@@ -32,8 +32,17 @@ python scripts/collect_sources.py
 python run.py check-config                            # validate config/*.yaml
 python run.py ingest --company all --quarter all      # register documents, store page text
 python run.py run    --company MM --quarter Q1FY27    # Steps 5-9: extract, estimates, verify, compare, commentary
-python run.py export --company MM --quarter Q1FY27    # Step 10
+python run.py export --company all --quarter all      # Excel + PDF reports (DRAFT until approved)
 ```
+
+## Review screen
+
+```
+streamlit run app.py
+```
+
+Pick a company and quarter, open the source of any figure, review every item (approve / reject /
+comment / correct), approve the report and export it. Reports are written to `output/`.
 
 Both `--company` and `--quarter` accept `all`. Company IDs are TITAN, ASIANPAINT, MM, INFY and RELIANCE. Quarters are Q4FY25, Q1FY26, Q3FY26, Q4FY26 and Q1FY27.
 

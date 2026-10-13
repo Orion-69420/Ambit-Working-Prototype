@@ -54,10 +54,10 @@ def test_correction_requires_reason(conn):
 
 def test_cli_init_db(tmp_path, capsys):
     assert run.main(["--db", str(tmp_path / "c.sqlite"), "init-db"]) == 0
-    assert "8 tables" in capsys.readouterr().out
+    assert f"{len(db.TABLES)} tables" in capsys.readouterr().out
 
 
 def test_cli_pending_commands_validate_and_exit(tmp_path):
-    assert run.main(["--db", str(tmp_path / "c.sqlite"), "export", "--company", "MM", "--quarter", "Q1FY27"]) == 2
+    assert run.main(["--db", str(tmp_path / "c.sqlite"), "export", "--company", "MM", "--quarter", "Q1FY27"]) == 1  # no database
     with pytest.raises(SystemExit):
         run.main(["ingest", "--company", "TRENT", "--quarter", "Q1FY27"])

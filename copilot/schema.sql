@@ -121,3 +121,17 @@ CREATE TRIGGER IF NOT EXISTS audit_log_no_update BEFORE UPDATE ON audit_log
 BEGIN SELECT RAISE(ABORT, 'audit_log is append-only'); END;
 CREATE TRIGGER IF NOT EXISTS audit_log_no_delete BEFORE DELETE ON audit_log
 BEGIN SELECT RAISE(ABORT, 'audit_log is append-only'); END;
+
+-- Change Reports (Step 10). A report is approved against a snapshot of its content; the input
+-- hash is the fingerprint of that content, so any later change returns the report to draft.
+CREATE TABLE IF NOT EXISTS reports (
+    id           TEXT PRIMARY KEY,                  -- e.g. MM_Q1FY27
+    company      TEXT NOT NULL,
+    quarter      TEXT NOT NULL,
+    status       TEXT NOT NULL CHECK (status IN ('draft', 'approved')),
+    snapshot     TEXT,                              -- JSON of the report as approved
+    input_hash   TEXT,                              -- fingerprint of the report content at approval
+    approved_by  TEXT,
+    approved_at  TEXT,
+    updated_at   TEXT NOT NULL
+);
