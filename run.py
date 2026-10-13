@@ -9,12 +9,14 @@
 --company and --quarter accept "all".
 """
 import argparse
+import pathlib
 import sys
 
-from copilot import config, db
+from copilot import config, db, ingest
 
-# Subcommands not built yet, and the procedure step that builds them
-PENDING = {"ingest": "Step 4", "run": "Steps 5-9", "export": "Step 10"}
+# Company/quarter subcommands and the procedure step that builds them
+STEPS = {"ingest": "Step 4", "run": "Steps 5-9", "export": "Step 10"}
+PENDING = {"run", "export"}
 
 
 def parse(argv):
@@ -25,8 +27,8 @@ def parse(argv):
     sub = ap.add_subparsers(dest="command", required=True)
     sub.add_parser("init-db", help="create an empty database")
     sub.add_parser("check-config", help="validate config/*.yaml and summarise the metric dictionary")
-    for name, step in PENDING.items():
-        p = sub.add_parser(name, help=f"(built in {step})")
+    for name, step in STEPS.items():
+        p = sub.add_parser(name, help=f"procedure {step}" + (" (not built yet)" if name in PENDING else ""))
         p.add_argument("--company", required=True, choices=companies + ["all"])
         p.add_argument("--quarter", required=True, choices=list(config.QUARTERS) + ["all"])
     return ap.parse_args(argv)
@@ -50,9 +52,30 @@ def main(argv=None):
             print(f"{cid:<11} {len(shown):>2} metrics: {', '.join(shown)}")
         print(f"config OK: {len(cfg.metrics)} metrics, {len(cfg.thresholds)} threshold groups")
         return 0
-    print(f"'{args.command}' is not built yet ({PENDING[args.command]} of the procedure).",
-          file=sys.stderr)
-    return 2
+    if args.command in PENDING:
+        print(f"'{args.command}' is not built yet ({STEPS[args.command]} of the procedure).",
+              file=sys.stderr)
+        return 2
+    if not pathlib.Path(args.db).exists():
+        print(f"no database at {args.db}; run 'python run.py init-db' first", file=sys.stderr)
+        return 1
+    conn = db.connect(args.db)
+    if args.command == "ingest":
+        return report_ingest(ingest.run(conn, args.company, args.quarter))
+
+
+def report_ingest(s):
+    print(f"registered {s['registered']} documents, {s['already']} already registered")
+    for label, reason in s["missing"]:
+        print(f"  missing   {label}: {reason}")
+    pages = {}
+    for label, page in s["scanned_pages"]:
+        pages.setdefault(label, []).append(page)
+    for label, p in pages.items():
+        print(f"  scanned   {label}: pages {p} (manual handling)")
+    for label, err in s["failed"]:
+        print(f"  FAILED    {label}: {err}", file=sys.stderr)
+    return 1 if s["failed"] else 0
 
 
 if __name__ == "__main__":
