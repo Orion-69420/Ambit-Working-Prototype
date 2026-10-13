@@ -114,6 +114,7 @@ python run.py check-config               # validate the configuration
 pytest                                   # 109 tests
 python scripts/verify_register.py        # re-check every displayed figure against its source
 python scripts/check_procedure.py        # cross-check the build against the Phase 1 procedure
+python scripts/build_pipeline_doc.py     # rebuild docs/Pipeline_Documentation.docx with current counts
 ```
 
 ## Configuration
@@ -153,6 +154,7 @@ output/       Excel and PDF reports (not in Git)
 
 | Document | Contents |
 |---|---|
+| [docs/Pipeline_Documentation.docx](docs/Pipeline_Documentation.docx) ([PDF](docs/Pipeline_Documentation.pdf)) | The full pipeline documentation and access guide, in the format of the Phase 1 procedure |
 | [docs/metric_dictionary.md](docs/metric_dictionary.md) | Every metric, its source and how changes are graded |
 | [docs/procedure_crosscheck.md](docs/procedure_crosscheck.md) | Each procedure requirement checked against the build (44 pass, 8 noted departures, 0 fail) |
 | [docs/step11_handover.md](docs/step11_handover.md) | Deliverables, acceptance checklist, open items |

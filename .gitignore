@@ -7,3 +7,5 @@ output/*
 
 # Internal documents kept out of the public repository
 *.docx
+!docs/Pipeline_Documentation.docx
+!docs/templates/ambit_style.docx
