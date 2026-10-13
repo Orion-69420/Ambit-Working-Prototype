@@ -120,7 +120,8 @@ def check(reader, company, row, f, kind, est=None):
             text = pdf[src["page"] - 1].get_text()
         # the number as it would be printed: plain decimal, with or without a trailing %
         plain = format(shown.normalize(), "f")
-        variants = {plain, f"{shown:.1f}", f"{shown:.2f}", f"{shown:,}"}
+        # most specific form first, so the note is the same on every run
+        variants = sorted({plain, f"{shown:.1f}", f"{shown:.2f}", f"{shown:,}"}, key=lambda v: (-len(v), v))
         hit = next((v for v in variants if re.search(r"(?<![\d.,])" + re.escape(v) + r"(?![\d])", text)), None)
         return src["text"], (shown if hit else None), hit is not None, f"printed as {hit!r} on the page" if hit else \
             "number not found on the cited page"
